@@ -393,26 +393,142 @@
 
 
 // 순수 함수와 비순수 함수
-var count =0;
-function increase(n){ // 순수함수 increase
-    return ++n;
-}
+// var count =0;
+// function increase(n){ // 순수함수 increase
+//     return ++n;
+// }
 
 // 순수 함수가 반환한 결과값을 변수에 재할당해서 상태를 변경
-count = increase(count);
-console.log(count); // 1
+// count = increase(count);
+// console.log(count); // 1
 
-count = increase(count);
-console.log(count); // 2
+// count = increase(count);
+// console.log(count); // 2
 
-var cnt =0;
-function increase1(){ // 비순수함수 increase1 - 외부상태를 직접 참조함 cnt의 변화에 따라 함수의 출력이 달라짐 그래서 비순수함수
-    return ++cnt;
+// var cnt =0;
+// function increase1(){ // 비순수함수 increase1 - 외부상태를 직접 참조함 cnt의 변화에 따라 함수의 출력이 달라짐 그래서 비순수함수
+//     return ++cnt;
+// }
+
+// increase1();
+// console.log(cnt); // 1
+
+// increase1();
+// console.log(cnt); // 2
+
+//-----------------------------------------------
+
+// 스코프
+
+// var var1 = 1; // 코드의 가장 바깥
+
+// if(true){
+//     var var2 = 2; // 코드 블록 내에서 선언
+//     if(true){
+//         var var3 = 3; // 중첩된 코드 블록 내에서 선언
+//     }
+// }
+
+// function foo() {
+//     var var4 = 4; // 함수 내에서 선언
+
+//     function bar() {
+//         var var5 = 5; // 중첩된 함수 내에서 선언
+//     }
+// }
+
+// console.log(var1); // 1
+// console.log(var2); // 2
+// console.log(var3); // 3
+// console.log(var4); // ReferenceError: var4 is not defined
+// console.log(var5); // ReferenceError: var5 is not defined
+
+// var x = 'global';
+
+// function foo(){
+//     var x = 'local';
+//     console.log(x) // local
+// }
+
+// foo();
+// console.log(x) // global
+
+// var는 한 스코프 내에서 중복 선언이 가능 -- 마지막에 선언한걸로 바뀜
+// 하지만 let이나 const는 안됨
+
+// function foo () {
+//     var x = 1;
+
+//     var x = 2;
+//     console.log(x); // 2
+// }
+
+// foo();
+
+// function bar () {
+//     let x = 1;
+
+//     let x = 2; //SyntaxError: Identifier 'x' has already been declared
+//     console.log(x);
+// }
+
+// bar();
+
+// function foo() {
+//     console.log('global function foo');
+// }
+
+// function bar() {
+    
+//     function foo(){
+//         console.log('local function foo')
+//     }
+//     foo();
+// }
+
+// bar(); // 출력은 'local function foo' 이게 나옴
+// foo(); // 출력은 'global function foo' 이게 나옴
+
+// var x = 1;
+
+// function foo() {
+//     var x = 10;
+//     bar();
+// }
+
+// function bar() {
+//     console.log(x);
+// }
+
+// foo(); // 1 출력
+// bar(); // 1 출력
+
+var x= 'global';
+
+function foo() {
+    console.log(x); // undefined
+    var x='local';
 }
 
-increase1();
-console.log(cnt); // 1
+foo();
+console.log(x); // global
 
-increase1();
-console.log(cnt); // 2
+var Counter = (function (){
+    var num =0;
 
+    return {
+        increase() {
+            return ++num;
+        },
+        decrease() {
+            return --num;
+        }
+    };
+}());
+
+console.log(Counter.num); // undefined -- num은 노출되지 않음 : 정보 은닉
+
+console.log(Counter.increase()); // 1
+console.log(Counter.increase()); // 2
+console.log(Counter.decrease()); // 1
+console.log(Counter.decrease()); // 0
