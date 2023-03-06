@@ -503,32 +503,97 @@
 // foo(); // 1 출력
 // bar(); // 1 출력
 
-var x= 'global';
+// var x= 'global';
 
-function foo() {
-    console.log(x); // undefined
-    var x='local';
-}
+// function foo() {
+//     console.log(x); // undefined
+//     var x='local';
+// }
 
-foo();
-console.log(x); // global
+// foo();
+// console.log(x); // global
 
-var Counter = (function (){
-    var num =0;
+// var Counter = (function (){
+//     var num =0;
 
-    return {
-        increase() {
-            return ++num;
-        },
-        decrease() {
-            return --num;
-        }
-    };
-}());
+//     return {
+//         increase() {
+//             return ++num;
+//         },
+//         decrease() {
+//             return --num;
+//         }
+//     };
+// }());
 
-console.log(Counter.num); // undefined -- num은 노출되지 않음 : 정보 은닉
+// console.log(Counter.num); // undefined -- num은 노출되지 않음 : 정보 은닉
 
-console.log(Counter.increase()); // 1
-console.log(Counter.increase()); // 2
-console.log(Counter.decrease()); // 1
-console.log(Counter.decrease()); // 0
+// console.log(Counter.increase()); // 1
+// console.log(Counter.increase()); // 2
+// console.log(Counter.decrease()); // 1
+// console.log(Counter.decrease()); // 0
+
+//---------------------------------------------------------------------
+
+// let, const 키워드와 블록레벨 스코프
+// var x=1;
+// var y=1;
+
+// var x=100;
+// var y;
+
+// console.log(x); // 100 출력
+// console.log(y); // 1출력
+
+// var x1 = 1;
+
+// if(true){
+//     var x1 =100;
+// }
+// console.log(x1) // 100 출력
+
+// let foo =1;
+// {
+//     let foo = 2;
+//     let bar = 3;
+// }
+
+// console.log(foo); // 1 - 전역변수
+// console.log(bar); // ReferenceError: bar is not defined - 지역변수
+
+// var 는 호이스팅이 발생하면서 초기화가 같이 일어남, 하지만 let은 호이스팅은 발생하지만 초기화는 일어나지 않음 -- 변수 호이스팅이 발생하지 않는 것처럼 동작한다
+
+// console.log(foo); // ReferenceError: Cannot access 'foo' before initialization
+
+// let foo; // 변수 선언 
+// console.log(foo); // undefined
+
+// foo =1; // 할당
+// console.log(foo); // 1
+
+// //지역변수에서도 동일
+// let bar = 1;
+// {
+//     console.log(bar); //ReferenceError: Cannot access 'bar' before initialization
+//     let bar =2;
+// }
+
+// 전역객체와 let
+// ---- 이 예제는 브라우저에서만 동작함
+// var x = 1;
+// y=2;
+// function foo() {}
+
+// console.log(window.x);
+// console.log(x)
+
+// console.log(window.y);
+// console.log(y)
+
+// console.log(window.foo);
+// console.log(foo);
+
+const foo =1;
+
+const bar; // SyntaxError: Missing initializer in const declaration -- const는 선언과 동시에 초기화를 해줘야함
+
