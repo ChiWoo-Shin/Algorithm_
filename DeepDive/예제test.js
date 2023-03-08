@@ -500,8 +500,8 @@
 //     console.log(x);
 // }
 
-// foo(); // 1 출력
-// bar(); // 1 출력
+// foo(); // 1 출력 -- 상위스코프는 전역
+// bar(); // 1 출력 -- 상위스코프는 전역
 
 // var x= 'global';
 
@@ -514,13 +514,13 @@
 // console.log(x); // global
 
 // var Counter = (function (){
-//     var num =0;
+//     var num =0; // private
 
 //     return {
-//         increase() {
+//         increase() { // public
 //             return ++num;
 //         },
-//         decrease() {
+//         decrease() { // public
 //             return --num;
 //         }
 //     };
@@ -810,38 +810,46 @@
 // console.log(person);
 // { firstName: 'Heegun', fullName: [Getter/Setter] }
 
-const person = {};
+// const person = {};
 
-Object.defineProperties(person, {
+// Object.defineProperties(person, {
     
-    //데이터 프로퍼티 정의
-    firstName: {
-        value: 'Ungmo',
-        writable: true,
-        enumerable: true,
-        configurable: true
-    },
-    lastName: {
-        value: 'Lee',
-        writable: true,
-        enumerable: true,
-        configurable: true
-    },
+//     //데이터 프로퍼티 정의
+//     firstName: {
+//         value: 'Ungmo',
+//         writable: false,
+//         enumerable: true,
+//         configurable: true
+//     },
+//     lastName: {
+//         value: 'Lee',
+//         writable: true,
+//         enumerable: false,
+//         configurable: true
+//     },
     
-    // 접근자 프로퍼티 정의
-    fullName:{
-        //getter 함수
-        get() {
-            return `${this.firstName} ${this.lastName}`;
-        },
-        set(name){
-            [this.firstName, this.lastName] = name.split(' ');
-        },
-        enumerable: true,
-        configurable: true
-    }
-});
+//     // 접근자 프로퍼티 정의
+//     fullName:{
+//         //getter 함수
+//         get() {
+//             return `${this.firstName} ${this.lastName}`;
+//         },
+//         set(name){
+//             [this.firstName, this.lastName] = name.split(' ');
+//         },
+//         enumerable: true,
+//         configurable: true
+//     }
+// });
 
-person.fullName = 'Heegun Lee';
-console.log(person); // { firstName: 'Heegun', lastName: 'Lee', fullName: [Getter/Setter] }
+// person.fullName = 'Heegun Lee';
+// console.log(person); // { firstName: 'Heegun', lastName: 'Lee', fullName: [Getter/Setter] }
+// console.log(Object.getOwnPropertyDescriptor(person,'firstName'))
 
+// const person ={
+//     name: 'Lee'
+// };
+
+// Object.getOwnPropertyDescriptor(person,'name').enumerable = false;
+
+// console.log(Object.getOwnPropertyDescriptor(person,'name'))
