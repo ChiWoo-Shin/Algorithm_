@@ -853,3 +853,369 @@
 // Object.getOwnPropertyDescriptor(person,'name').enumerable = false;
 
 // console.log(Object.getOwnPropertyDescriptor(person,'name'))
+
+//------------------------------------------------------
+// 17장 생성자 함수에 의한 객체 생성
+
+//예제 17-01-----------------------------------------------
+// 빈 객체 생성
+// const person = new Object();
+// console.log(person); // {}
+
+// 프로퍼티 추가
+// person.name = 'Lee';
+// person.sayHello = function () {
+//     console.log('Hi! My name is '+ this.name);
+// };
+
+// console.log(person); // { name: 'Lee', sayHello: [Function (anonymous)] }
+// person.sayHello(); // Hi! My name is Lee
+
+//-------------------------------------------------
+
+//예제 17-02 ----------------------------------------------------
+// const strObj = new String('Lee');
+// console.log(typeof strObj); // Object
+// console.log(strObj); // [String: 'Lee']
+
+// const numObj = new Number(123);
+// console.log(typeof numObj); // Object
+// console.log(numObj); // [Number: 123]
+
+// const boolObj = new Boolean(true);
+// console.log(typeof boolObj); // Object
+// console.log(boolObj); // [Boolean: true]
+
+// const func = new Function('x', 'return x * x');
+// console.log(typeof func); // function
+// console.dir(func); // [Function: anonymous]
+
+// const arr = new Array(1, 2, 3);
+// console.log(typeof arr); // object
+// console.log(arr); // [ 1, 2, 3 ]
+
+// const regExp = new RegExp(/ab+c/i);
+// console.log(typeof regExp); //object
+// console.log(regExp); // /ab+c/i
+
+// const date = new Date();
+// console.log(typeof date); //object
+// console.log(date) // 2023-03-09T14:22:32.580Z
+//-------------------------------------------------------------------
+
+// 예제 17-03 -------------------------------------------------------
+// const circle1 = {
+//     radius: 5,
+//     getDiameter() {
+//         return 2* this.radius;
+//     }
+// };
+
+// console.log(circle1.getDiameter()); // 10
+
+// const circle2 = {
+//     radius: 10,
+//     getDiameter() {
+//         return 2 * this.radius;
+//     }
+// };
+
+// console.log(circle2.getDiameter()); // 20
+
+// ----------------------------------------------------------------------
+
+// 예제 17-04 ----------------------------------------------------------
+// function Circle(radius) {
+//     this.radius = radius;
+//     this.getDiameter = function () {
+//         return 2*this.radius;
+//     }
+// }
+
+// const circle1 = new Circle(5); // 반지름이 5인 Circle 객체를 생성
+// const circle2 = new Circle(10); // 반지름이 10인 Circle 객체를 생성
+
+// console.log(circle1.getDiameter()); // 10
+// console.log(circle2.getDiameter()); // 20
+// ----------------------------------------------------------------------
+
+// 예제 17-05 ----------------------------------------------------------
+// 함수는 다양한 방식으로 호출될 수 있음
+// function foo() {
+//     console.log(this);
+// }
+
+// 일반적인 함수로서 호출
+// 전역 객체는 브라우저 환경에서는 window, Node.js 환경에서는 global을 가리킴
+// foo(); // window
+
+// const obj = { foo }; // ES6 프로퍼티 축약 표현
+
+// 메서드로서 호출
+// obj.foo(); // obj
+
+// 생성자 함수로서 호출
+// const inst = new foo();
+// ----------------------------------------------------------------------
+
+// 예제 17-06 ----------------------------------------------------------
+// function Circle(radius) {
+//     this.radius = radius;
+//     this.getDiameter = function () {
+//         return 2*this.radius;
+//     }
+// }
+
+// new 연산자와 함께 호출하지 않으면 생성자 함수로 동작하지 않음
+// 즉, 일반 함수로서 호출
+// const circle3 = Circle(15);
+
+// 일반 함수로서 호출된 Circle은 반환문이 없으므로 암묵적으로 undefined를 반환
+// console.log(circle3); // undefined
+
+//일반 함수로서 호출된 Circle 내의 this는 전역 객체를 가리킨다.
+// console.log(radius); // 15
+// ----------------------------------------------------------------------
+
+// 예제 17-07 ----------------------------------------------------------
+// 생성자 함수
+// function Circle(radius) {
+//     // 인스턴스 초기화
+//     this.radius = radius;
+//     this.getDiameter = function () {
+//         return 2*this.radius;
+//     }
+// }
+
+// 인스턴스 생성
+// const circle1 = new Circle(5); // 반지름이 5인 Circle 객체를 생성
+// ----------------------------------------------------------------------
+
+// 예제 17-08 ----------------------------------------------------------
+// function Circle(radius) {
+     // 1. 암묵적으로 인스턴스가 생성되고 this에 바인딩됨
+//     console.log(this); // Circle {}
+
+//     this.radius = radius;
+//     this.getDiameter = function () {
+//         return 2*this.radius;
+//     }
+// }
+
+// const circle1 = new Circle(5);
+
+// ----------------------------------------------------------------------
+
+// 예제 17-09 ~ 10  ----------------------------------------------------------
+// function Circle(radius) {
+//     // 1. 암묵적으로 인스턴스가 생성되고 this에 바인딩됨
+
+//     // 2. this에 바인딩되어 있는 인스턴스를 초기화함
+//     this.radius = radius;
+//     this.getDiameter = function () {
+//         return 2*this.radius;
+//     }
+//     // 3. 완성된 인스턴스가 바인딩된 this를 암묵적으로 반환
+// }
+
+// 인스턴스 생성. Circle 생성자 함수는 암묵적으로 this를 반환
+// const circle = new Circle(5);
+
+// console.log(circle); // Circle { radius: 5, getDiameter: [Function (anonymous)] }
+
+// ----------------------------------------------------------------------
+
+// 예제 17-11 ----------------------------------------------------------
+// function Circle(radius) {
+//     // 1. 암묵적으로 인스턴스가 생성되고 this에 바인딩됨
+
+//     // 2. this에 바인딩되어 있는 인스턴스를 초기화함
+//     this.radius = radius;
+//     this.getDiameter = function () {
+//         return 2*this.radius;
+//     }
+//     // 3. 완성된 인스턴스가 바인딩된 this를 암묵적으로 반환
+//     // 명시적으로 객체를 반환하면 암묵적인 this 반환이 무시됨
+//     return {};
+// }
+
+// 인스턴스 생성. Circle 생성자 함수는 암묵적으로 this를 반환
+// const circle = new Circle(5);
+
+// console.log(circle); // Circle {}
+
+// ----------------------------------------------------------------------
+
+// 예제 17-12 ----------------------------------------------------------
+// function Circle(radius) {
+//     // 1. 암묵적으로 인스턴스가 생성되고 this에 바인딩됨
+
+//     // 2. this에 바인딩되어 있는 인스턴스를 초기화함
+//     this.radius = radius;
+//     this.getDiameter = function () {
+//         return 2*this.radius;
+//     }
+//     // 3. 완성된 인스턴스가 바인딩된 this를 암묵적으로 반환
+//     // 명시적으로 원시 값을 반환하면 원시 값 반환은 무시되고 암묵적으로 this 가 반환
+//     return 100;
+// }
+
+// // 인스턴스 생성. Circle 생성자 함수는 암묵적으로 this를 반환
+// const circle = new Circle(5);
+
+// console.log(circle); // Circle { radius: 5, getDiameter: [Function (anonymous)] }
+
+// ----------------------------------------------------------------------
+
+// 예제 17-13 ----------------------------------------------------------
+// 함수는 객체다.
+// function foo() {}
+
+// // 함수는 객체이므로 프로퍼티를 소유할 수 있다.
+// foo.prop = 10;
+
+// foo.method = function() {
+//     console.log(this.prop); // 10
+// }
+
+// foo.method();
+
+// ----------------------------------------------------------------------
+
+// 예제 17-14 ----------------------------------------------------------
+// function foo() {}
+
+// 일반적인 함수로서 호출 : [[Call]] 이 호출
+// foo();
+
+// 생성자 함수로서 호출 : [[Construct]] 가 호출
+// new foo();
+
+// ----------------------------------------------------------------------
+
+// 예제 17-15 ----------------------------------------------------------
+// 일반 함수 정의 : 함수 선언문, 함수 표현식
+// function foo () {}
+// const bar = function() {};
+// //프로퍼티 x의 값으로 할당된 것은 일반 함수로 정의된 함수. 이는 메서드로 인정하지 않음
+
+// const baz = {
+//     x: function () {}
+// };
+
+// // 일반 함수로 정의된 함수만이 constructor
+// new foo(); // foo {}
+// new bar(); // bar {}
+// new baz.x(); // x {}
+
+// // 화살표 함수 정의
+// const arrow = () => {};
+
+// // new arrow(); // TypeError: arrow is not a constructor
+
+// // 메서드 정의: ES6의 메서드 축약 표현만 메서드로 인정
+// const obj = {
+//     x() {}
+// };
+
+// new obj.x(); // TypeError: obj.x is not a constructor
+// ----------------------------------------------------------------------
+
+// 예제 17-16 ----------------------------------------------------------
+// function foo() {}
+
+// 일반 함수로서 호출
+// [[Call]]이 호출됨. 모든 함수 객체는 [[Call]]이 구현
+// foo();
+
+// 생성자 함수로서 호출
+// [[Construct]]가 호출됨. 이때 [[Construct]]를 갖지 않는다면 에러가 발생
+// new foo();
+// ----------------------------------------------------------------------
+
+// 예제 17-17 ----------------------------------------------------------
+// 생성자 함수로서 정의하지 않은 일반 함수
+// function add(x, y){
+//     return x + y;
+// }
+
+// // 생성자 함수로서 정의하지 않은 일반 함수를 new 연산자와 함께 호출
+// let inst = new add();
+
+// // 함수가 객체를 반환하지 않았으므로 반환문이 무시됨. 따라서 빈 객체가 생성되어 반환됨
+// console.log(inst); // add {}
+
+// // 객체를 반환하는 일반 함수
+// function createUser(name, role){
+//     return {name, role};
+// }
+
+// // 일반 함수를 new 연산자와 함께 호출
+// inst = new createUser('Lee', 'admin');
+// // 함수가 생성한 객체를 반환
+// console.log(inst); // { name: 'Lee', role: 'admin' }
+// ----------------------------------------------------------------------
+
+// 예제 17-18 ----------------------------------------------------------
+// 생성자 함수
+// function Circle(radius) {
+//     this.radius = radius;
+//     this.getDiameter = function() {
+//         return 2*this.radius;
+//     }
+// }
+
+// // new 연산자 없이 생성자 함수 호출하면 일반 함수로서 호출됨
+// const circle = Circle(5);
+// console.log(circle); // undefined
+
+// // 일반 함수 내부의 this는 전역 객체 window를 가리킴
+// console.log(radius); // 5
+// console.log(getDiameter()); // 10
+
+// circle.getDiameter(); // TypeError: Cannot read properties of undefined (reading 'getDiameter')
+// ----------------------------------------------------------------------
+
+// 예제 17-19 ----------------------------------------------------------
+// 생성자 함수
+// function Circle(radius) {
+//     // 이 함수가 new 연산자와 함게 호출되지 않았다면 new.target은 undefined 다.
+//     if (!new.target){
+//         // new 연산자와 함께 생성자 함수를 재귀 호출하여 생성된 인스턴스를 반환
+//         return new Circle(radius);
+//     }
+
+//     this.radius = radius;
+//     this.getDiameter = function() {
+//         return 2* this.radius;
+//     };
+// }
+
+// // new 연산자 없이 생성자 함수를 호출하여도 new.target을 통해 생성자 함수로서 호출됨
+// const circle = Circle(5);
+// console.log(circle.getDiameter()); // 10
+// ----------------------------------------------------------------------
+
+// 예제 17-20 ----------------------------------------------------------
+// 스코프 세이프 생성자 패턴
+function Circle(radius) {
+    // 생성자 함수가 new 연사자와 함께 호출되면 함수의 선두에서 빈 객체를 생성
+    // this 에 바인딩하고, 이때 this 와 Circle은 프로토타입에 의해 연결됨
+
+    // 이 함수가 new 연산자와 함게 호출되지 않았다면 이 시점의 this는 전역 객체 window를 가리킴
+    // 즉, this 와 Circle은 프로토타입에 의해 연결되지 않음
+    if(!(this instanceof Circle)){
+        // new 연산자와 함께 호출하여 생성된 인스턴스를 반환함
+        return new Circle(radius);
+    }
+
+    this.radius = radius;
+    this.getDiameter = function() {
+        return 2* this.radius;
+    };
+}
+
+// new 연산자 없이 생성자 함수를 호출하여도 생성자 함수로서 호출됨
+const circle = Circle(5);
+console.log(circle.getDiameter()); // 10
+// ----------------------------------------------------------------------
