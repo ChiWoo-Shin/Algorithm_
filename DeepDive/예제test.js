@@ -1198,24 +1198,277 @@
 
 // 예제 17-20 ----------------------------------------------------------
 // 스코프 세이프 생성자 패턴
-function Circle(radius) {
-    // 생성자 함수가 new 연사자와 함께 호출되면 함수의 선두에서 빈 객체를 생성
-    // this 에 바인딩하고, 이때 this 와 Circle은 프로토타입에 의해 연결됨
+// function Circle(radius) {
+//     // 생성자 함수가 new 연사자와 함께 호출되면 함수의 선두에서 빈 객체를 생성
+//     // this 에 바인딩하고, 이때 this 와 Circle은 프로토타입에 의해 연결됨
 
-    // 이 함수가 new 연산자와 함게 호출되지 않았다면 이 시점의 this는 전역 객체 window를 가리킴
-    // 즉, this 와 Circle은 프로토타입에 의해 연결되지 않음
-    if(!(this instanceof Circle)){
-        // new 연산자와 함께 호출하여 생성된 인스턴스를 반환함
-        return new Circle(radius);
-    }
+//     // 이 함수가 new 연산자와 함게 호출되지 않았다면 이 시점의 this는 전역 객체 window를 가리킴
+//     // 즉, this 와 Circle은 프로토타입에 의해 연결되지 않음
+//     if(!(this instanceof Circle)){
+//         // new 연산자와 함께 호출하여 생성된 인스턴스를 반환함
+//         return new Circle(radius);
+//     }
 
-    this.radius = radius;
-    this.getDiameter = function() {
-        return 2* this.radius;
-    };
-}
+//     this.radius = radius;
+//     this.getDiameter = function() {
+//         return 2* this.radius;
+//     };
+// }
 
-// new 연산자 없이 생성자 함수를 호출하여도 생성자 함수로서 호출됨
-const circle = Circle(5);
-console.log(circle.getDiameter()); // 10
+// // new 연산자 없이 생성자 함수를 호출하여도 생성자 함수로서 호출됨
+// const circle = Circle(5);
+// console.log(circle.getDiameter()); // 10
+// ----------------------------------------------------------------------
+
+// ------------------------------------------------------------------------
+// 예제 18-01 ----------------------------------------------------------
+
+// 1. 함수는 무영의 리터럴로 생성할 수 있음
+// 2. 함수는 변수에 저장할 수 있음
+// 런타임(할당 단계)에 함수 리터럴이 평가되어 함수 객체가 생성되고 변수에 할당 됨
+// const increase = function (num) {
+//     return ++num;
+// }
+
+// const decrease = function (num) {
+//     return --num;
+// }
+
+// // 2. 함수는 객체에 저장할 수 있음
+// const auxs = { increase, decrease };
+
+// // 3. 함수의 매개변수에 전달할 수 있음
+// // 4. 함수의 반환값으로 사용할 수 있음
+// function makeCounter(aux) {
+//     let num = 0;
+
+//     return function () {
+//         num = aux(num);
+//         return num;
+//     };
+// }
+
+// // 3. 함수는 매개변수에게 함수를 전달할 수 있음
+// const increaser = makeCounter(auxs.increase);
+// console.log(increaser()); // 1
+// console.log(increaser()); // 2
+
+// // 3. 함수는 매개변수에게 함수를 전달할 수 있음
+// const decreaser = makeCounter(auxs.decrease);
+// console.log(decreaser()); // -1
+// console.log(decreaser()); // -2
+
+// ----------------------------------------------------------------------
+
+// 예제 18-02 ----------------------------------------------------------
+
+// function square (number) {
+//     return number * number;
+// }
+
+// console.dir(square); // [Function: square]
+
+// ----------------------------------------------------------------------
+
+// 예제 18-03 ----------------------------------------------------------
+
+// function square(number) {
+//     return number * number;
+// }
+
+// console.log(Object.getOwnPropertyDescriptors(square));
+// {
+//     length: { value: 1, writable: false, enumerable: false, configurable: true },
+//     name: {
+//       value: 'square',
+//       writable: false,
+//       enumerable: false,
+//       configurable: true
+//     },
+//     arguments: {
+//       value: null,
+//       writable: false,
+//       enumerable: false,
+//       configurable: false
+//     },
+//     caller: {
+//       value: null,
+//       writable: false,
+//       enumerable: false,
+//       configurable: false
+//     },
+//     prototype: { value: {}, writable: true, enumerable: false, configurable: false }
+// }
+
+// __proto__는 square 함수의 프로퍼티가 아님
+// console.log(Object.getOwnPropertyDescriptor(square, '__proto__')); // undefined
+
+// __proto__는 Object.prototype 객체의 접근자 프로퍼티다.
+// square 함수는 Object.prototype 객체로부터 __proto__ 접근자 프로퍼티를 상속받음
+// console.log(Object.getOwnPropertyDescriptor(Object.prototype, '__proto__'));
+// {
+//     get: [Function: get __proto__],
+//     set: [Function: set __proto__],
+//     enumerable: false,
+//     configurable: true
+// }
+
+// ----------------------------------------------------------------------
+
+// 예제 18-04 ----------------------------------------------------------
+
+// function multiply(x, y){
+//     console.log(arguments);
+//     // [Arguments] {}
+//     // [Arguments] { '0': 1 }
+//     // [Arguments] { '0': 1, '1': 2 }
+//     // [Arguments] { '0': 1, '1': 2, '2': 3 }
+//     return x * y;
+// }
+
+// console.log(multiply()); // NaN
+// console.log(multiply(1)); // NaN
+// console.log(multiply(1, 2)); // 2
+// console.log(multiply(1, 2, 3)); // 2
+
+// ----------------------------------------------------------------------
+
+// 예제 18-05 ----------------------------------------------------------
+
+// function multiply(x, y){
+
+//     // 이터레이터
+//     const iterator = arguments[Symbol.iterator]();
+    
+//     // 이터레이터의 next 메서드를 호출하여 이터러블 객체 arguments를 순회
+//     console.log(iterator.next()); // { value: 1, done: false }
+//     console.log(iterator.next()); // { value: 2, done: false }
+//     console.log(iterator.next()); // { value: 3, done: false }
+//     console.log(iterator.next()); // { value: undefined, done: true }
+
+//     return x * y;
+// }
+
+// multiply(1, 2, 3);
+
+// ----------------------------------------------------------------------
+
+// 예제 18-06 ----------------------------------------------------------
+
+// function sum(){
+//    let res = 0;
+
+//    // arguments 객체는 length 프로퍼티가 있는 유사 배열 객체이므로 for 문으로 순회할 수 있음
+//    for ( let i=0; i<arguments.length; i++){
+//     res += arguments[i];
+//    }
+
+//    return res;
+// }
+
+// console.log(sum()); // 0
+// console.log(sum(1, 2)); // 3
+// console.log(sum(1, 2, 3)); // 6
+// ----------------------------------------------------------------------
+
+// 예제 18-07 ----------------------------------------------------------
+
+// function sum() {
+//     // arguments 객체를 배열로 변환
+//     const array = Array.prototype.slice.call(arguments);
+//     return array.reduce(function (pre, cur){
+//         return pre + cur;
+//     }, 0);
+// }
+
+// console.log(sum(1, 2)); // 3
+// console.log(sum(1, 2, 3, 4, 5)); // 15
+// ----------------------------------------------------------------------
+
+// 예제 18-08 ----------------------------------------------------------
+// ES6 Rest parameter
+// function sum(...args) {
+//     return args.reduce((pre, cur) => pre + cur, 0);
+// }
+
+// console.log(sum(1, 2)); // 3
+// console.log(sum(1, 2, 3, 4, 5)); // 15
+// ----------------------------------------------------------------------
+
+// 예제 18-09 ----------------------------------------------------------
+// function foo(func) {
+//     return func();
+// }
+
+// function bar() {
+//     return 'caller : ' + bar.caller;
+// }
+
+// console.log(foo(bar));
+// // caller : function foo(func) {
+// //     return func();
+// // }
+// console.log(bar()); // caller : null
+
+// ----------------------------------------------------------------------
+
+// 예제 18-10 ----------------------------------------------------------
+
+// length 는 매개변수의 개수를 가리킴
+// function foo() {}
+// console.log(foo.length); // 0
+
+// function bar(x) {
+//     return x;
+// }
+// console.log(bar.length); // 1
+
+// function baz(x, y){
+//     return x*y;
+// }
+// console.log(baz.length); // 2
+
+// ----------------------------------------------------------------------
+
+// 예제 18-11 ----------------------------------------------------------
+
+// 기명 함수 표현식
+// var namedFunc = function foo() {};
+// console.log(namedFunc.name); // foo
+
+// 익명 함수 표현식
+// var anonymousFunc = function () {};
+// ES5 : name 프로퍼티는 빈 문자열을 값으로 갖음
+// ES6 : name 프로퍼티는 함수 객체를 가리키는 변수 이름을 값으로 갖음
+// console.log(anonymousFunc.name); // anonymousFunc
+
+// 함수 선언문(Function declaration)
+// function bar() {}
+// console.log(bar.name); // bar
+
+// ----------------------------------------------------------------------
+
+// 예제 18-12 ----------------------------------------------------------
+
+// const obj = { a : 1};
+
+// 객체 리터럴 방식으로 생성한 객체의 프로토타입 객체는 Object.prototype 임
+// console.log(obj.__proto__ === Object.prototype); // true
+
+// 객체 리터럴 방식으로 생성한 객체는 프로토타입 객체인 Object.prototype의 프로퍼티를 상속받음
+// hasOwnProperty 메서드는 Object.prototype 의 메서드임
+
+// console.log(obj.hasOwnProperty('a')); // true
+// console.log(obj.hasOwnProperty('__proto__')); // false
+
+// ----------------------------------------------------------------------
+
+// 예제 18-13 ----------------------------------------------------------
+// 함수 객체는 prototype 프로퍼티를 소유함
+console.log((function () {}).hasOwnProperty('prototype')); // true
+
+// 일반 객체는 prototype 프로퍼티를 소유하지 않음
+console.log
+(({}).hasOwnProperty('prototype')); // false
+
 // ----------------------------------------------------------------------
