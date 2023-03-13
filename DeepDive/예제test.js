@@ -1465,10 +1465,241 @@
 
 // 예제 18-13 ----------------------------------------------------------
 // 함수 객체는 prototype 프로퍼티를 소유함
-console.log((function () {}).hasOwnProperty('prototype')); // true
+// console.log((function () {}).hasOwnProperty('prototype')); // true
 
 // 일반 객체는 prototype 프로퍼티를 소유하지 않음
-console.log
-(({}).hasOwnProperty('prototype')); // false
+// console.log
+// (({}).hasOwnProperty('prototype')); // false
+
+// ----------------------------------------------------------------------
+
+// 예제 19-01 ----------------------------------------------------------
+// const person = {
+//      name: 'Lee',
+//      address: 'Seoul'
+// };
+
+// console.log(person); // { name: 'Lee', address: 'Seoul' }
+// ----------------------------------------------------------------------
+
+// 예제 19-02 ----------------------------------------------------------
+// const circle = {
+//      radius: 5, // 반지름
+     
+//      getDiameter () {
+//           return 2* this.radius;
+//      },
+
+//      getPerimeter () {
+//           return 2*Math.PI * this.radius;
+//      },
+
+//      getArea() {
+//           return Math.PI * this.radius**2;
+//      }
+// };
+
+// console.log(circle);
+/*
+{
+  radius: 5,
+  getDiameter: [Function: getDiameter],
+  getPerimeter: [Function: getPerimeter],
+  getArea: [Function: getArea]
+}
+*/
+// console.log(circle.getDiameter()); // 10
+// console.log(circle.getPerimeter()); // 31.41592653589793
+// console.log(circle.getArea()); // 78.53981633974483
+// ----------------------------------------------------------------------
+
+// 예제 19-03 ----------------------------------------------------------
+
+// 생성자 함수
+// function Circle(radius){
+//      this.radius = radius;
+//      this.getArea = function() {
+//           // Math.PI는 원주율을 사타내는 상수
+//           return Math.PI * this.radius**2;
+//      };
+// }
+
+// const circle1 = new Circle(1);
+
+// const circle2 = new Circle(2);
+
+// Circle 생성자 함수는 인스턴스를 생성할 때마다 동일한 동작을 하는
+// getArea 메서드를 중복 생성하고 모든 인스턴스가 중복 소유함
+// getArea 메서드는 하나만 생성하여 모든 인스턴스가 공유해서 사용하는 것이 바람직함
+
+// console.log(circle1.getArea === circle2.getArea); // false
+// console.log(circle1.getArea()); // 3.141592653589793
+// console.log(circle2.getArea()); // 12.566370614359172
+// ----------------------------------------------------------------------
+
+// 예제 19-04 ----------------------------------------------------------
+
+// 생성자 함수
+// function Circle(radius){
+//      this.radius = radius;
+// }
+
+// Circle 생성자 함수가 생성한 모든 인스턴스가 getArea 메서드를
+// 공유해서 사용할 수 있도록 프로토타입에 추가
+// 프로토타입은 Circle 생성자 함수의 prototype 프로퍼티에 바인딩 되어 있다
+// Circle.prototype.getArea = function () {
+//      return Math.PI * this.radius**2;
+// }
+
+// 인스턴스 생성
+// const circle1 = new Circle(1);
+// const circle2 = new Circle(2);
+
+// Circle 생성자 함수가 생성한 모든 인스턴스는 부모 객체의 역할을 하는
+// 프로토타입 Circle.prototype으로부터 getArea 메서드를 상속받음
+// 즉, Circle 생성자 함수가 생성하는 모든 인스턴스는 하나의 getArea 메서드를 공유함
+
+// console.log(circle1.getArea === circle2.getArea); // true
+// console.log(circle1.getArea()); // 3.141592653589793
+// console.log(circle2.getArea()); // 12.566370614359172
+// ----------------------------------------------------------------------
+
+// 예제 19-06 ----------------------------------------------------------
+
+// const obj = {};
+// const parent = {x: 1};
+
+// getter 함수인 get __proto__ 가 호출되어 obj 객체의 프로토타입을 취득
+// obj.__proto__;
+
+// setter 함수인 set __proto__ 가 호출되어 obj 객체의 프로토타입을 교체
+// obj.__proto__ = parent;
+
+// console.log(obj.x); // 1
+// ----------------------------------------------------------------------
+
+// 예제 19-07 ----------------------------------------------------------
+
+// const person = {name : 'Lee'};
+
+// person 객체는 __proto__ 프로퍼티를 소유하지 않음
+// console.log(person.hasOwnProperty('__proto__')); // false
+
+// __proto__ 프로퍼티는 모든 객체의 프로토타입 객체인 Object.prototype 의 접근자 프로퍼티
+// console.log(Object.getOwnPropertyDescriptor(Object.prototype, '__proto__'));
+/*
+{
+  get: [Function: get __proto__],
+  set: [Function: set __proto__],
+  enumerable: false,
+  configurable: true
+}
+*/
+
+// 모든 객체는 Object.prototype의 접근자 프로퍼티 __proto__를 상속받아 사용할 수 있음
+// console.log({}.__proto__===Object.prototype); // true
+// ----------------------------------------------------------------------
+
+// 예제 19-08 ----------------------------------------------------------
+
+// const parent = {};
+// const child = {};
+
+// child의 프로토타이을 parent로 설정
+// child.__proto__ = parent;
+
+// parent의 프로토타입을 child로 설정
+// parent.__proto__ = child; // TypeError: Cyclic __proto__ value
+
+// ----------------------------------------------------------------------
+
+// 예제 19-09 ----------------------------------------------------------
+
+// obj는 프로토타입 체인의 종점이다. 따라서 Object.__proto__를 상속받을수 없음
+// const obj = Object.create(null); // undefined
+
+// obj는 Object.__proto__ 를 상속받을 수 없다
+// console.log(obj.__proto__); // null
+
+// 따라서 __proto__보다 Object.getPrototypeOf 메서드를 사용하는 편이 좋다
+// console.log(Object.getPrototypeOf(obj));
+
+// ----------------------------------------------------------------------
+
+// 예제 19-10 ----------------------------------------------------------
+
+// const obj = {};
+// const parent = { x: 1 };
+
+// obj 객체의 프로토타입을 취득
+// Object.getPrototypeOf(obj); // obj.__proto__;
+
+// obj 객체의 프로토타입을 교체
+// Object.setPrototypeOf(obj, parent); // obj.__proto__ = parent;
+
+// console.log(obj.x); // 1
+
+// ----------------------------------------------------------------------
+
+// 예제 19-11 ----------------------------------------------------------
+
+// 함수 객체는 prototype 프로퍼티를 소유함
+// (function () {}).hasOwnProperty('prototype'); // true
+
+// 일반 객체는 prototype 프로퍼티를 소유하지 않음
+// ({}).hasOwnProperty('prototype'); // false
+
+// ----------------------------------------------------------------------
+
+// 예제 19-12 ----------------------------------------------------------
+
+// 화살표 함수는 non-constructor
+// const Person = name => {
+//      this.name = name;
+// };
+
+// non-constructor는 prototype 프로퍼티를 소유하지 않음
+// console.log(Person.hasOwnProperty('prototype')); // false
+
+// non-constructor는 프로토타입을 생성하지 않음
+// console.log(Person.prototype); // undefined
+
+// ES6의 메서드 축약 표현으로 정의한 메서드는 non-constructor 
+// const obj = {
+//      foo() {}
+// };
+
+//non-constructor 는 prototype 프로퍼티를 소유하지 않음
+// console.log(obj.foo.hasOwnProperty('prototype')); // false
+
+//non-constructor는 프로토타입을 생성하지 않음
+// console.log(obj.foo.prototype); // undefined
+
+// ----------------------------------------------------------------------
+
+// 예제 19-13 ----------------------------------------------------------
+
+// function Person(name) {
+//      this.name = name;
+// }
+
+// const me = new Person('Lee');
+
+// 결국 Person.prototype과 me.__proto__는 결국 동일한 프로토타입을 가리킴
+// console.log(Person.prototype === me.__proto__); // true
+
+// ----------------------------------------------------------------------
+
+// 예제 19-14 ----------------------------------------------------------
+
+// 생성자 함수
+function Person(name) {
+     this.name = name;
+}
+
+// me 객체의 생성자 함수는 Person 
+const me = new Person('Lee');
+
+console.log(me.constructor === Person); // true
 
 // ----------------------------------------------------------------------
