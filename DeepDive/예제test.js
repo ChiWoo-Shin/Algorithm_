@@ -1693,13 +1693,179 @@
 // 예제 19-14 ----------------------------------------------------------
 
 // 생성자 함수
-function Person(name) {
-     this.name = name;
-}
+// function Person(name) {
+//      this.name = name;
+// }
 
 // me 객체의 생성자 함수는 Person 
+// const me = new Person('Lee');
+
+// console.log(me.constructor === Person); // true
+
+// ----------------------------------------------------------------------
+
+// 예제 19-15 ----------------------------------------------------------
+// obj 객체를 생성자 함수는 Object
+// const obj = new Object();
+// console.log(obj.constructor === Object); // true
+
+// add 함수 객체를 생성한 생성자 함수는 Function
+// const add = new Function('a', 'b', 'return a+b');
+// console.log(add.constructor === Function); // true
+
+// 생성자 함수 
+// function Person(name){
+//   this.name = name;
+// }
+
+// me 객체를 생성한 생성자 함수 Person
+// const me = new Person('Lee');
+// console.log(me.constructor === Person); //true
+
+// ----------------------------------------------------------------------
+
+// 예제 19-16 ----------------------------------------------------------
+// 객체 리터럴
+// const obj = {};
+
+// 함수 리터럴
+// const add = function (a, b) {return a+b;};
+
+// 배열 리터럴
+// const arr = [1, 2, 3];
+
+// 정규 표현식 리터럴
+// const regexp = /is/ig;
+// ----------------------------------------------------------------------
+
+// 예제 19-17 ----------------------------------------------------------
+// obj 객체는 Object 생성자 함수로 생성한 객첵가 아니라 객체 리터럴로 생성
+// const obj = {};
+
+// 하지만 obj 객체의 생성자 함수는 Object 생성자 함수
+// console.log(obj.constructor === Object); // true
+// ----------------------------------------------------------------------
+
+// 예제 19-18 ----------------------------------------------------------
+// 2. OBject 생성자 함수에 의한 객체 생성
+// 인수가 전달되지 않았을 때 추상 연상 OrdinaryObjectCreate를 호출하여 빈 객체를 생성
+// let obj = new Object();
+// console.log(obj); // {}
+
+// 1. new.target 이 undefined 나 Object가 아닌 경우
+// 인스턴스 -> Foo.prototype -> Object.prototype 순으로 프로토타입 체인이 생성
+// class Foo extends Object {}
+// new Foo();
+
+// 3. 인수가 전달된 경우에는 인수를 객체로 변환
+// Number 객체 생성
+// obj = new Object(123);
+// console.log(obj); // [Number: 123]
+
+// String 객체 생성
+// obj = new Object('123');
+// console.log(obj); //[String: '123']
+
+// ----------------------------------------------------------------------
+
+// 예제 19-19 ----------------------------------------------------------
+// foo 함수는 FUnction 생성자 함수로 생성한 함수 객체가 아니라 함수 선언문으로 생성
+// function foo() {}
+
+// 하지만 constructor 프로퍼티를 통해 확인해보면 함수 foo의 생성자 함수는 Function 생성자 함수
+// console.log(foo.constructor === Function); // true
+
+// ----------------------------------------------------------------------
+
+// 예제 19-20 ----------------------------------------------------------
+// 함수 정의 (constructor)가 평가되어 함수 객체를 생성하는 시점에 프로토타입도 더불어 생성됨
+// console.log(Person.prototype); // 교재 - {constructor: f}, VScode - {}, Browser - {constructor: f}
+
+// 생성자 함수
+// function Person(name){
+//   this.name = name;
+// }
+
+// ----------------------------------------------------------------------
+
+// 예제 19-21 ----------------------------------------------------------
+// 화살표 함수는 non-constructor
+// const Person = name =>{
+//   this.name = name;
+// }
+
+// non-constructor는 프로토타입이 생성되지 않음
+// console.log(Person.prototype); // undefined
+
+// ----------------------------------------------------------------------
+
+// 예제 19-22 ----------------------------------------------------------
+// 전역 객체 window는 브라우저에 종속적이므로 아래 코드는 브라우저 환경에서 실행
+// 빌트인 객체인 Object는 전역 객체 window의 프로퍼티
+// console.log(window.Object===Object) // Browser - true, VScode - ReferenceError: window is not defined
+
+// ----------------------------------------------------------------------
+
+// 예제 19-23 ----------------------------------------------------------
+// const obj = {x:1};
+
+// ----------------------------------------------------------------------
+
+// 예제 19-28 ----------------------------------------------------------
+// function Person(name){
+//   this.name = name;
+// }
+
+// 프로토타입 메서드
+// Person.prototype.sayHello = function() {
+//   console.log(`Hi! My name is ${this.name}`);
+// };
+
+// const me = new Person('Lee');
+// const you = new Person('Kim');
+
+// me.sayHello(); // Hi! My name is Lee
+// you.sayHello(); // Hi! My name is Kim
+
+// ----------------------------------------------------------------------
+
+// 예제 19-29 ----------------------------------------------------------
+function Person(name){
+  this.name = name;
+}
+
+// 프로토타입 메서드
+Person.prototype.sayHello = function() {
+  console.log(`Hi! My name is ${this.name}`);
+};
+
 const me = new Person('Lee');
 
-console.log(me.constructor === Person); // true
+// hasOwnProperty는 Object.prototype의 메서드
+// console.log(me.hasOwnProperty('name')); // true
 
+// ----------------------------------------------------------------------
+
+// 예제 19-30 ----------------------------------------------------------
+Object.getPrototypeOf(me) === Person.prototype; // 19-29와 연결됨 - true
+// ----------------------------------------------------------------------
+
+// 예제 19-31 ----------------------------------------------------------
+Object.getPrototypeOf(Person.prototype) === Object.prototype; // 19-29와 연결됨 - true
+// ----------------------------------------------------------------------
+
+// 예제 19-32 ----------------------------------------------------------
+me.hasOwnProperty('name'); // 19-29와 연결됨 - true
+// ----------------------------------------------------------------------
+
+// 예제 19-33 ----------------------------------------------------------
+Object.prototype.hasOwnProperty.call(me, 'name'); // true
+// ----------------------------------------------------------------------
+
+// 예제 19-34 ----------------------------------------------------------
+console.log(me.foo) // undefined
+// ----------------------------------------------------------------------
+
+// 예제 19-35 ----------------------------------------------------------
+me.hasOwnProperty('name'); // true
 // ----------------------------------------------------------------------
