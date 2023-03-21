@@ -2472,20 +2472,593 @@ a: a
 // ----------------------------------------------------------------------
 
 // 예제 19-72 ----------------------------------------------------------
-const person = {
-  name: 'Lee',
-  address: 'Seoul',
-  __proto__: {age: 20}
-};
+// const person = {
+//   name: 'Lee',
+//   address: 'Seoul',
+//   __proto__: {age: 20}
+// };
 
-console.log(Object.keys(person)); // [ 'name', 'address' ]
+// console.log(Object.keys(person)); // [ 'name', 'address' ]
 // 예제 19-73 ----------------------------------------------------------
-console.log(Object.values(person)); // [ 'Lee', 'Seoul' ]
+// console.log(Object.values(person)); // [ 'Lee', 'Seoul' ]
 // 예제 19-74 ----------------------------------------------------------
-console.log(Object.entries(person)); // [ [ 'name', 'Lee' ], [ 'address', 'Seoul' ] ]
+// console.log(Object.entries(person)); // [ [ 'name', 'Lee' ], [ 'address', 'Seoul' ] ]
 
-Object.entries(person).forEach(([key, value]) => console.log(key, value));
+// Object.entries(person).forEach(([key, value]) => console.log(key, value));
 // name Lee
 // address Seoul
 
+// ----------------------------------------------------------------------
+
+// 예제 20-01 ----------------------------------------------------------
+// function foo() {
+//   x = 10;
+// }
+// foo();
+
+// console.log(x); // 10
+// ----------------------------------------------------------------------
+
+// 예제 20-02 ----------------------------------------------------------
+// 'use strict'; // strict mode 적용
+
+// function foo() {
+//   x = 10;
+// }
+// foo();
+
+// console.log(x); // ReferenceError: x is not defined
+// ----------------------------------------------------------------------
+
+// 예제 20-07 ----------------------------------------------------------
+// (function (){
+//   // non-strict mode
+//   var let = 10; // 에러가 발생하지 않음
+
+//   function foo(){
+//     'use strict';
+
+//     let = 20; // SyntaxError: Unexpected strict mode reserved word
+//   }
+//   foo();
+// }());
+// ----------------------------------------------------------------------
+
+// 예제 20-08 ----------------------------------------------------------
+// (function () {
+//   'use strict';
+
+//   x = 1;
+//   console.log(x); // ReferenceError: x is not defined
+// }());
+// ----------------------------------------------------------------------
+
+// 예제 20-09 ----------------------------------------------------------
+// (function () {
+//   'use strict';
+
+//   var x = 1;
+//   delete x; //SyntaxError: Delete of an unqualified identifier in strict mode.
+
+//   function foo(a);{
+//     delete a; // SyntaxError: Delete of an unqualified identifier in strict mode.
+//   } 
+//   delete foo; // SyntaxError: Delete of an unqualified identifier in strict mode.
+// }());
+// ----------------------------------------------------------------------
+
+// 예제 20-10 ----------------------------------------------------------
+// (function () {
+//   'use strict';
+
+//   function foo(x, x){ // SyntaxError: Duplicate parameter name not allowed in this context
+//     return x+x;
+//   }
+//   console.log(foo(1,2));
+// }());
+// ----------------------------------------------------------------------
+
+// 예제 20-11 ----------------------------------------------------------
+// (function () {
+//   'use strict';
+
+//   with({ x : 1}){ // SyntaxError: Strict mode code may not include a with statement
+//     console.log(x);
+//   }
+// }());
+// ----------------------------------------------------------------------
+
+// 예제 20-12 ----------------------------------------------------------
+// (function () {
+//   'use strict';
+
+//   function foo() {
+//     console.log(this); // undefined
+//   }
+//   foo();
+
+//   function Foo() {
+//     console.log(this); // Foo
+//   }
+//   new Foo();
+// }());
+// ----------------------------------------------------------------------
+
+// 예제 20-13 ----------------------------------------------------------
+// (function (a) {
+//   'use strict';
+//   // 매개변수에 전달된 인수를 재할당하여 변경
+//   a =2;
+
+
+//   console.log(arguments); // [Arguments] { '0': 1 } - 변경된 인수가 arguments 객체에 반영되지 않음
+//   console.log(a); // 2
+// }(1));
+// ----------------------------------------------------------------------
+
+// 예제 21-01 ----------------------------------------------------------
+// // String 생성자 함수에 의한 String 객체 생성
+// const strObj = new String('Lee'); // String {"Lee"}
+// console.log(typeof strObj); // object
+// console.log(strObj); // [String: 'Lee']
+
+// // Number 생성자 함수에 의한 Number 객체 생성
+// const numObj = new Number(123); // Number {123}
+// console.log(typeof numObj); // object
+// console.log(numObj); // [Number: 123]
+
+// // Boolean 생성자 함수에 의한 Boolean 객체 생성
+// const boolObj = new Boolean(true); // Boolean {true}
+// console.log(typeof boolObj); // object
+// console.log(boolObj); // [Boolean: true]
+
+// // Function 생성자 함수에 의한 Function 객체(함수) 생성
+// const func = new Function('x', 'return x*x'); // f anonymous(x)
+// console.log(typeof func); // function
+// console.log(func); // [Function: anonymous]
+
+// // Array 생성자 함수에 의한 Array 객체(배열) 생성
+// const arr = new Array(1, 2, 3); // (3) [1, 2, 3]
+// console.log(typeof arr); // object
+// console.log(arr); // [ 1, 2, 3 ]
+
+// //RegExp 생성자 함수에 의한 RegExp 객체(정규 표현식) 생성
+// const regExp = new RegExp(/ab+c/i) // /ab+c/i
+// console.log(typeof regExp); // object
+// console.log(regExp); // /ab+c/i
+
+// // Date 생성자 함수에 의한 Date 객체 생성
+// const date = new Date();
+// console.log(typeof date); // object
+// console.log(date); // 2023-03-20T12:43:00.492Z
+// ----------------------------------------------------------------------
+
+// 예제 21-02 ----------------------------------------------------------
+// // String 생성자 함수에 의한 String 객체 생성
+// const strObj = new String('Lee');
+
+// // String 생성자 함수를 통해 생서한 strObj 객체의 프로토타입은 String.prototype이다.
+// console.log(Object.getPrototypeOf(strObj) === String.prototype); // true
+// ----------------------------------------------------------------------
+
+// 예제 21-03 ----------------------------------------------------------
+// Number 생성자 함수에 의한 Number 객체 생성
+// const numObj = new Number(1.5);
+// console.log(numObj); // [Number: 1.5]
+
+// toFixed는 Number.prototype의 프로토타입 메서드
+// Number.prototype.toFixed는 소수점 자리를 반올림하여 문자열로 반환
+// console.log(numObj.toFixed()); // 2
+
+// isInteger는 Number의 정적 메서드
+// Number.isInteger는 인수가 정수(inter)인지 검사하여 그 결과를 Boolean으로 반환
+// console.log(Number.isInteger(0.5)); // false
+// ----------------------------------------------------------------------
+
+// 예제 21-04 ----------------------------------------------------------
+// const str = 'hello';
+
+// // 원시 타입인 문자열이 프로퍼티와 메서드를 갖고 있는 객체처럼 동작
+// console.log(str.length); // 5
+// console.log(str.toUpperCase()); // HELLO
+// ----------------------------------------------------------------------
+
+// 예제 21-05 ----------------------------------------------------------
+// const str = 'hi';
+
+// 원시 타입인 문자열이 래퍼 객체인 String 인스턴스로 변환됨
+// console.log(str.length); // 2
+// console.log(str.toUpperCase()); // HI
+
+// 래퍼 객체로 프로퍼티에 접근하거나 메서드를 호출한 후, 다시 원시값으로 되돌림
+// console.log(typeof str); // string
+// ----------------------------------------------------------------------
+
+// 예제 21-06 ----------------------------------------------------------
+// 1. 식별자 str은 문자열을 값으로 가지고 있음
+// const str = 'hello';
+
+// 2. 식별자 str은 암묵적으로 생성된 래퍼 객체를 가리킴
+// 식별자 str의 값 'hello'는 래퍼 객체의 [[StringData]] 내부 슬롯에 할당됨
+// 래퍼 객체에 name 프로퍼티가 동적 추가
+// str.name = 'Lee';
+
+// 3. 식별자 str은 다시 원래의 문자열, 즉 래퍼 객체의 [[StringData]] 내부 슬롯에 할당된 원시값을 가짐
+// 이때 2번에서 생성된 래퍼 객체는 아무도 참조하지 않는 상태이므로 가비지 컬렉션의 대상이 됨
+
+// 4. 식별자 str은 새롭게 암묵적으로 생성된(2번에서 생성된 래퍼 객체왕는 다른) 래퍼 객체를 가리킴
+// 새롭게 생성된 래퍼 객체에는 name 프로퍼티가 존재하지 않음
+// console.log(str.name); // undefined
+
+// 5. 식별자 str은 다시 원래의 문자열, 즉 래퍼 객체의 [[StringData]] 내부 슬롯에 할당된 원시값을 가짐
+// 이때 4번에서 생성된 래퍼 객체는 아무도 참조하지 않는 상태이므로 가비지 컬렉션의 대상이 됨
+// console.log(typeof str, str); //string Hello
+// ----------------------------------------------------------------------
+
+// 예제 21-07 ----------------------------------------------------------
+// const num = 1.5;
+
+// 원시 타입인 숫자가 래퍼 객체인 Number 객체로 변환됨
+// console.log(num.toFixed()); // 2
+
+// 래퍼 객체로 프로퍼티에 접근하거나 메서드를 호출한 후, 다시 원시값으로 되돌림
+// console.log(typeof num, num); // number 1.5
+// ----------------------------------------------------------------------
+
+// 예제 21-08 ----------------------------------------------------------
+// console.log(globalThis === this) // false
+// console.log(globalThis === global) // true
+// -- browser
+// console.log(globalThis === this) // true
+// console.log(globalThis === window) // true
+// console.log(globalThis === self) // true
+// console.log(globalThis === frames) // true
+// ----------------------------------------------------------------------
+
+// 예제 21-09 ----------------------------------------------------------
+// Browser 환경에서 동작
+// 문자열 'F' 를 16진수로 해석하여 10진수로 변환하여 반환함
+// window.parseInt('F', 16); // 15
+// window.parseInt는 parseInt로 호출할 수 있음
+// parseInt('F', 16); // 15
+
+// console.log(window.parseInt === parseInt); // true
+// ----------------------------------------------------------------------
+
+// 예제 21-10 ----------------------------------------------------------
+// var 키워드로 선언한 전역 변수
+// var foo = 1;
+// console.log(window.foo); // 1
+
+// 선언하지 않은 변수에 값을 암묵적 전역. bar는 전역 변수가 안라 전역 객체의 프로퍼티
+// bar = 2; // window.bar = 2
+// console.log(window.bar); 
+
+// 전역변수
+// function baz() {return 3;}
+// console.log(window.baz()); // 3
+
+// ----------------------------------------------------------------------
+
+// 예제 21-11 ----------------------------------------------------------
+// -- browser 환경 확인
+// let foo = 123;
+// console.log(window.foo); // undefined
+
+// ----------------------------------------------------------------------
+
+// 예제 21-15 ----------------------------------------------------------
+// 표현식인 문
+// console.log(eval('1 + 2;')) // 3
+
+// 표현식이 아닌 문
+// console.log(eval('var x = 5;')) // undefined
+
+// eval 함수에 의해 런타임에 변수 선언문이 실행되어 x 변수가 선언됨
+// console.log(x); // 5
+
+// 객체 리터럴은 반드시 괄호로 둘러쌈
+// const o = eval('({a:1})');
+// console.log(o); // { a: 1 }
+
+// 함수 리터럴은 반드시 괄호로 둘러쌈
+// const f = eval('(function() {return 1;})');
+// console.log(f()); // 1
+
+// 예제 21-16 ----------------------------------------------------------
+// console.log(eval('1+2; 3+4;')) // 7
+// ----------------------------------------------------------------------
+
+// 예제 21-17 ----------------------------------------------------------
+// const x = 1;
+
+// function foo() {
+//   // eval 함수는 런타임에 foo 함수의 스코프를 동적으로 수정
+//   eval('var x = 2;');
+//   console.log(x); // 2
+// }
+
+// foo();
+// console.log(x); // 1
+// ----------------------------------------------------------------------
+
+// 예제 21-18 ----------------------------------------------------------
+// const x = 1;
+// function foo() {
+//   'use strict';
+
+  // strict mode 에서 eval 함수는 기존의 스코프를 수정하지 않고 eval 함수 자신의 자체적인 스코프를 생성
+//   eval('var x =2; console.log(x);'); // 2
+//   console.log(x); // 1
+// }
+
+// foo();
+// console.log(x); // 1
+// ----------------------------------------------------------------------
+
+// 예제 21-19 ----------------------------------------------------------
+// const x = 1;
+// function foo() {
+//   eval('var x = 2; console.log(x);'); // 2
+
+  // let, const 키워드를 사용한 변수 선언문은 strict mode가 적용됨
+//   eval('const x = 3; console.log(x);'); // 3
+//   console.log(x); // 2
+// }
+
+// foo();
+// console.log(x); // 1
+// ----------------------------------------------------------------------
+
+// 예제 21-20 ----------------------------------------------------------
+// 인수가 유한수이면 true를 반환
+// console.log(isFinite(0)); // true
+// console.log(isFinite(2e64)); // true
+// console.log(isFinite('10')); // true : '10' -> 10
+// console.log(isFinite(null)); // true : null -> 0
+
+// 인수가 무한수 또는 NaN으로 평가되는 값이면 false
+// console.log(isFinite(Infinity)); // false
+// console.log(isFinite(-Infinity)); // false
+
+// 인수가 NaN으로 평가되는 값이라면 false 반환
+// console.log(isFinite(NaN)); // false
+// console.log(isFinite('Hello')); // false
+// console.log(isFinite('2005/12/12')); // false
+
+// 예제 21-21 ----------------------------------------------------------
+// console.log(+null); // 0
+// ----------------------------------------------------------------------
+
+// 예제 21-22 ----------------------------------------------------------
+// // 숫자
+// console.log(isNaN(NaN)); // true
+// console.log(isNaN(10)); // false
+
+// // 문자열
+// console.log(isNaN('blabla')); // true: 'blabla' => NaN
+// console.log(isNaN('10')); // false : '10' => 10
+// console.log(isNaN('10.12')); // false : '10.12' => 10.12
+// console.log(isNaN('')); // false: '' => 0
+// console.log(isNaN(' ')); // false: ' ' => 0
+
+// // 불리언
+// console.log(isNaN(true)); // false: true -> 1
+// console.log(isNaN(null)); // false: null -> 0
+
+// // undefined
+// console.log(isNaN(undefined)); // true: undefined => NaN
+
+// // 객체
+// console.log(isNaN({})); // true: {} => NaN
+
+// // date
+// console.log(isNaN(new Date())); // false: new Date() => Number
+// console.log(isNaN(new Date().toString())); // true : String => NaN
+// ----------------------------------------------------------------------
+
+// 예제 21-23 ----------------------------------------------------------
+// 문자열을 실수로 해석하여 반환
+// console.log(parseFloat('3.14')); // 3.14
+// console.log(parseFloat('10.00')); // 10
+
+// 공백으로 구분된 문자열은 첫 번째 문자열을 반환
+// console.log(parseFloat('34 45 66')); // 34
+// console.log(parseFloat('40 years')); // 40
+
+// 첫 번째 문자열을 숫자로 변환할 수 없다면 NaN을 반환
+// console.log(parseFloat('He was 40')); // NaN
+
+// 앞뒤 공백은 무시됨
+// console.log(parseFloat(' 60 ')) // 60
+
+// ----------------------------------------------------------------------
+
+// 예제 21-24 ----------------------------------------------------------
+// 문자열을 정수로 해석하여 반환
+// console.log(parseInt('10')); // 10
+// console.log(parseInt('10.123')); // 10
+
+// 예제 21-25 ----------------------------------------------------------
+// 전달받은 인수가 문자열이 아니면 문자열로 반환한 다음, 정수로 해석하여 반환
+// console.log(parseInt(10)); // 10
+// console.log(parseInt(10.123)); // 10
+
+// ----------------------------------------------------------------------
+
+// 예제 21-26 ----------------------------------------------------------
+// // '10'을 10 진수로 해석하고 그 결과를 10 진수 정수로 반환
+// console.log(parseInt('10')); // 10
+// // '10'을 2진수로 해석하고 그 결과를 10진수 정수로 반환
+// console.log(parseInt('10', 2)); // 2
+// // '10'을 8진수로 해석하고 그 결과를 10진수 정수로 반환
+// console.log(parseInt('10', 8)); // 8
+// // '10'을 16진수로 해석하고 그 결과를 10진수 정수로 반환
+// console.log(parseInt('10', 16)); // 16
+// ----------------------------------------------------------------------
+
+// 예제 21-27 ----------------------------------------------------------
+// const x = 15;
+
+// 10진수 15를 2진수로 변환하여 그 결과를 문자열로 반환
+// console.log(x.toString(2)); // 1111
+// 문자열 '1111'을 2진수로 해석하고 그 결과를 10진수 정수로 반환
+// console.log(parseInt(x.toString(2),2)); // 15
+
+// 10진수 15를 8진수로 변환하여 그 결과를 문자열로 반환
+// console.log(x.toString(8)); // 17
+// 문자열 '17'을 8진수로 해석하고 그 결과를 10진수 정수로 반환
+// console.log(parseInt(x.toString(8), 8)); // 15
+
+// 10진수 15를 16진수로 변환하여 그 결과를 문자열로 변환
+// console.log(x.toString(16)); // f
+// 문자열 'f' 를 16진수로 해석하고 그 결과를 10진수 정수로 반환
+// console.log(parseInt(x.toString(16), 16)); // 15
+
+// 숫자값을 문자열로 반환
+// console.log(x.toString()); // 15
+// 문자열 '15'를 10진수로 해석하고 그 결과를 10진수 정수로 반환
+// console.log(x.toString()); // 15
+
+// 예제 21-28 ----------------------------------------------------------
+// 16진수 리터럴 '0xf'를 16진수로 해석하고 10진수 정수로 그 결과를 반환
+// console.log(parseInt('0xf')); // 15
+// console.log(parseInt('f', 16)); // 15
+
+// 예제 21-29 ----------------------------------------------------------
+// 2진수 리터럴과 8진수 리터럴은 제대로 해석하지 못함
+// console.log(parseInt('0b10')); // 0
+// console.log(parseInt('0o10')); // 0
+// ----------------------------------------------------------------------
+
+// 예제 21-30 ----------------------------------------------------------
+// 문자열 '10'을 2진수로 해석
+// console.log(parseInt('10', 2)); // 2
+// 문자열 '10'을 8진수로 해석
+// console.log(parseInt('10', 8)); // 8
+
+// 예제 21-31 ----------------------------------------------------------
+// 'A'는 10진수로 해석할 수 없음
+// console.log(parseInt('A0')); // NaN
+// '2'는 2진수로 해석할 수 없음
+// console.log(parseInt('20', 2)); // NaN
+// ----------------------------------------------------------------------
+
+// 예제 21-32 ----------------------------------------------------------
+// 10진수로 해석할 수 없는 'A' 이후의 문자는 모두 무시
+// console.log(parseInt('1A0')); // 1
+// 2진수로 해설할 수 없는 '2' 이후의 문자는 모두 무시
+// console.log(parseInt('102', 2)); // 2
+// 8진수로 해석할 수 없는 '8' 이후의 문자는 모두 무시
+// console.log(parseInt('58', 8)); // 5
+// 16진수로 해석할 수 없는 'G' 이후의 문자는 모두 무시
+// console.log(parseInt('FG', 16)); // 15
+// ----------------------------------------------------------------------
+
+// 예제 21-33 ----------------------------------------------------------
+// 공백으로 구분된 문자열은 첫 번째 문자열만 변환
+// console.log(parseInt('34 45 66')); // 34
+// console.log(parseInt('40 years')); // 40
+// 첫 번째 문자열을 숫자로 변환할 수 없다면 NaN을 반환
+// console.log(parseInt('He was 40')); // NaN
+// 앞뒤 공백은 무시됨
+// console.log(parseInt(' 60 ')); // 60
+// ----------------------------------------------------------------------
+
+// 예제 21-34 ----------------------------------------------------------
+// 완전한 URI
+// const uri = 'http://example.com?name=이웅모&job=programmer&teacher';
+
+// encodeURI 함수는 완전한 URI를 전달받아 이스케이프 처리를 위해 인코딩
+// const enc = encodeURI(uri);
+// console.log(enc);
+// http://example.com?name=%EC%9D%B4%EC%9B%85%EB%AA%A8&job=programmer&teacher
+
+// 예제 21-35 ----------------------------------------------------------
+// const dec = decodeURI(enc);
+// console.log(dec);
+// http://example.com?name=이웅모&job=programmer&teacher
+// ----------------------------------------------------------------------
+
+// 예제 21-36 ----------------------------------------------------------
+// URI의 쿼리 스트링
+// const uriComp = 'name=이웅모&job=programmer&teacher';
+
+// encodeURIComponent 함수는 인수로 전달받은 문자열을 URI의 구성요소인 쿼리 스트링의 일부로 간주
+// 따라서 쿼리 스트링 구분자로 사용되는 =, ?, &까지 인코딩함
+// let enc = encodeURIComponent(uriComp);
+// console.log(enc);
+// name%3D%EC%9D%B4%EC%9B%85%EB%AA%A8%26job%3Dprogrammer%26teacher
+
+// let dec = decodeURIComponent(enc);
+// console.log(dec);
+// name=이웅모&job=programmer&teacher
+
+// encodeURI 함수는 인수로 전달받은 문자열을 완전한 URI로 간주
+// 따라서 쿼리 스트링 구분자로 사용되는 =, ?ㅡ &를 인코딩 하지 않음
+// enc = encodeURI(uriComp);
+// console.log(enc);
+// name=%EC%9D%B4%EC%9B%85%EB%AA%A8&job=programmer&teacher
+
+// dec = decodeURI(enc);
+// console.log(dec);
+// name=이웅모&job=programmer&teacher
+// ----------------------------------------------------------------------
+
+// 예제 21-37 ----------------------------------------------------------
+// var x =10; // 전역 변수
+// function foo() {
+  // 선언하지 않은 식별자에 값을 할당
+//   y = 20; // window.y = 20;
+// }
+
+// foo();
+// 선언하지 않은 식별자 y를 전역에서 참조할 수 있음
+// console.log(x+y); // 30
+// ----------------------------------------------------------------------
+
+// 예제 21-38 ----------------------------------------------------------
+// 전역 변수 x는 호이스팅이 발생함
+// console.log(x); // undefined
+// 전역 변수가 아니라 단지 전역 객체의 프로퍼티인 y는 호이스팅이 발생하지 않음
+// console.log(y); // ReferenceError: y is not defined
+
+// var x = 10;
+
+// function foo() {
+  // 선언하지 않은 식별자에 값을 할당
+//   y = 20; // window.y = 20;
+// }
+// foo();
+
+// 선언하지 않은 식별자 y를 전역에서 참조할 수 있음
+// console.log(x+y); // 30
+// ----------------------------------------------------------------------
+
+// 예제 21-39 ----------------------------------------------------------
+var x = 10; // 전역 변수
+
+function foo () {
+  // 선언하지 않은 식별자에 값을 할당
+  y = 20; // window.y = 20;
+  console.log(x+y); // 30
+}
+
+foo();
+
+console.log(globalThis.x); // undefined -- node.js 환경에서는 var x로 선언하면 전역변수이지만 앞에..나왔던거처럼.. 따로 관리.......기억..가물..
+console.log(globalThis.y); // 20
+// browser
+// console.log(window.x); // 10
+// console.log(window.y); // 20
+
+delete x; // 전역 변수는 삭제되지 않음
+delete y; // 프로퍼티는 삭제됨
+
+console.log(globalThis.x); // undefined
+console.log(globalThis.y); // undefined
+
+// brower
+// console.log(window.x); // 10
+// console.log(window.y); // undefined
 // ----------------------------------------------------------------------
