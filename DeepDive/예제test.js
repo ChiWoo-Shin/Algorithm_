@@ -3156,34 +3156,350 @@ a: a
 
 // 예제 22-06 ----------------------------------------------------------
 // this 바인딩은 함수 호출 방식에 따라 동적으로 결정
-const foo = function() {
-  console.dir(this); 
-};
+// const foo = function() {
+//   console.dir(this); 
+// };
 
 // 동일한 함수도 다양한 방식으로 호출 가능
 
 // 1. 일반 함수 호출
 // foo 함수를 일반적인 방식으로 호출
 // foo 함수 내부의 this는 전역 객체 window를 가리킴
-foo(); // <ref *1> Object [global]
+// foo(); // <ref *1> Object [global]
 
 
 // 2. 메서드 호출
 // foo 함수를 프로퍼티 값으로 할당하여 호출
 // foo 함수 내부의 this는 메서드를 호출한 객체 obj를 가리킴
-const obj = {foo};
-obj.foo(); // { foo: [Function: foo] }
+// const obj = {foo};
+// obj.foo(); // { foo: [Function: foo] }
 
 // 3. 생성자 함수 호출
 // foo 함수를 new 연산자와 함께 생성자 함수로 호출
 // foo 함수 내부의 this는 생성자 함수가 생성한 인스턴스를 가리킴
-new foo(); // foo {}
+// new foo(); // foo {}
 
 // 4. Function.prototype.applye/call/bind 메서드에 의한 간접 호출
 // foo 함수 내부의 this는 인수에 의해 결정
-const bar = {name : 'bar'};
+// const bar = {name : 'bar'};
 
-foo.call(bar); // { name: 'bar' }
-foo.apply(bar); // { name: 'bar' }
-foo.bind(bar)(); // { name: 'bar' }
+// foo.call(bar); // { name: 'bar' }
+// foo.apply(bar); // { name: 'bar' }
+// foo.bind(bar)(); // { name: 'bar' }
+// ----------------------------------------------------------------------
+
+// 예제 22-07 ----------------------------------------------------------
+// function foo() {
+//   console.log("foo's this: ", this); // <ref *1> Object [global]
+//   function bar() {
+//     console.log("bar's this: ", this); // <ref *1> Object [global]
+//   }
+//   bar();
+// }
+// foo();
+// ----------------------------------------------------------------------
+
+// 예제 22-08 ----------------------------------------------------------
+// function foo() {
+//   'use strict';
+
+//   console.log("foo's this: ", this); // undefined
+//   function bar() {
+//     console.log("bar's this: ", this); // undefined
+//   }
+//   bar();
+// }
+// foo();
+// ----------------------------------------------------------------------
+
+// 예제 22-09 ----------------------------------------------------------
+// var 키워드로 선언한 전역 변수 value는 전역 객체의 프로퍼티
+// var value = 1;
+// const 키워드로 선언한 전역 변수 value는 전역 객체의 프로퍼티가 아니다
+// const value = 1;
+
+// const obj = {
+//   value: 100,
+//   foo(){
+//     console.log("foo's this: ", this); // { value: 100, foo: [Function: foo] }
+//     console.log("foo's this.value: ", this.value); // 100
+
+//     // 메서드 내에서 정의한 중첩함수
+//     function bar() {
+//       console.log("bar's this: ", this); //  <ref *1> Object [global] - browser : window
+//       console.log("bar's this.value: ", this.value); // undefined - browser : 1
+//     }
+
+//     bar();
+//   }
+// };
+
+// obj.foo();
+// ----------------------------------------------------------------------
+
+// 예제 22-10 ----------------------------------------------------------
+// var value = 1;
+
+// const  obj = {
+//   value: 100,
+//   foo() {
+//     console.log("foo's this: ", this); // { value: 100, foo: [Function: foo] }
+//     // 콜백 함수 내부의 this에는 전역 객체가 바인딩됨
+
+//     setTimeout(function() {
+//       console.log("callback's this: ", this); // callback's this:  Timeout 
+//       console.log("callback's this.vale: ", this.value); //undefined - browser : 1
+      
+//     }, 100);
+//   }
+// };
+
+// obj.foo()
+// ----------------------------------------------------------------------
+
+// 예제 22-11 ----------------------------------------------------------
+// var value = 1;
+
+// const  obj = {
+//   value: 100,
+//   foo() {
+//     // this 바인딩(obj)을 변수 that에 할당함
+//     const that = this;
+
+//     // 콜백 함수 내부에서 this 대신 that을 참조
+//     setTimeout(function() {
+//       console.log(that.value); // 100
+//     }, 100);
+//   }
+// };
+
+// obj.foo();
+// ----------------------------------------------------------------------
+
+// 예제 22-12 ----------------------------------------------------------
+// var value = 1;
+
+// const  obj = {
+//   value: 100,
+//   foo() {
+//     // 콜백 함수 명시적으로 this를 바인딩함
+//     setTimeout(function() {
+//       console.log(this.value); // 100
+//     }.bind(this), 100);
+//   }
+// };
+
+// obj.foo();
+// ----------------------------------------------------------------------
+
+// 예제 22-13 ----------------------------------------------------------
+// var value = 1;
+
+// const  obj = {
+//   value: 100,
+//   foo() {
+//     // 화살표 함수 내부의 this는 상위 스코프의 this를 가리킴
+//     setTimeout(() => console.log(this.value), 100); // 100
+//   }
+// };
+
+// obj.foo();
+// ----------------------------------------------------------------------
+
+// 예제 22-14 ----------------------------------------------------------
+// const person = {
+//   name : 'Lee',
+//   getName() {
+//     // 메서드 내부의 this는 메서드를 호출한 객체에 바인딩됨
+//     return this.name;
+//   }
+// };
+
+// 메서드 getName을 호출한 객체는 person 임
+// console.log(person.getName()); // Lee
+// ----------------------------------------------------------------------
+
+// 예제 22-15 ----------------------------------------------------------
+
+// const person = {
+//   name : 'Lee',
+//   getName() {
+//     // 메서드 내부의 this는 메서드를 호출한 객체에 바인딩됨
+//     return this.name;
+//   }
+// };
+
+// 메서드 getName을 호출한 객체는 person 임
+// console.log(person.getName()); // Lee
+
+// const anotherPerson = {
+//   name: 'Kim'
+// };
+
+// getName 메서드를 anotherPerson 객체의 메서드로 할당
+// anotherPerson.getName = person.getName;
+
+//getName 메서드를 호출한 객체는 anotherPerson 임
+// console.log(anotherPerson.getName()); // Kim;
+
+// getName 메서드를 변수에 할당
+// const getName = person.getName; 
+
+// getName 메서드를 일반함수로 호출
+// console.log(getName()); // undefined - brwoser : ''
+// 브라우저 환경에서는 window.name은 브라우저 창의 이름을 나타내는 빌트인 프로퍼티이며 기본값은 ''
+// Node.js 환경에서 this.name은 undefined
+// ----------------------------------------------------------------------
+
+// 예제 22-16 ----------------------------------------------------------
+
+// function Person(name) {
+//   this.name = name;
+// }
+
+// Person.prototype.getName = function () {
+//   return this.name;
+// };
+
+// const me = new Person('Lee');
+
+// getName 메서드를 호출한 객체는 me
+// console.log(me.getName()); // Lee
+
+// Person.prototype.name = 'Kim';
+
+// getName 메서드를 호출한 객체는 Person.prototype
+// console.log(Person.prototype.getName()); // Kim
+// ----------------------------------------------------------------------
+
+// 예제 22-17 ----------------------------------------------------------
+// 생성자 함수
+// function Circle(radius) {
+//   // 생성자 함수 내부의 this는 생성자 함수가 생성할 인스턴스를 가리킴
+//   this.radius = radius;
+//   this.getDiameter = function () {
+//     return 2*this.radius;
+//   };
+// }
+
+// 반지름이 5인 Circle 객체를 생성
+// const circle1 = new Circle(5);
+// 반지름이 10인 Circle 객체를 생성
+// const circle2 = new Circle(10);
+
+// console.log(circle1.getDiameter()); // 10
+// console.log(circle2.getDiameter()); // 20
+// 예제 22-18 ----------------------------------------------------------
+// new 연산자와 함께 호출하지 않으면 생성자 함수로 동작하지 않음
+// const circle3 = Circle(15);
+
+// 일반 함수로 호출된 Circle에는 반환문이 없으므로 암묵적으로 undefined를 반환
+// console.log(circle3); // undefined
+
+// 일반 함수로 호출된 Circle 내부의 this는 전역 객체를 가리킴
+// console.log(radius); // 15
+
+// ----------------------------------------------------------------------
+
+// 예제 22-19 ----------------------------------------------------------
+// function getThisBinding() {
+//   return this;
+// }
+
+// this로 사용할 객체
+// const thisArg = { a: 1};
+// console.log(getThisBinding()); // <ref *1> Object [global]
+
+// getThisBinding 함수를 호출하면서 인수로 전달한 객체를 getThisBinding 함수의 this에 바인딩
+// console.log(getThisBinding.apply(thisArg)); // { a: 1 }
+// console.log(getThisBinding.call(thisArg)); // { a: 1 }
+// ----------------------------------------------------------------------
+
+// 예제 22-20 ----------------------------------------------------------
+// function getThisBinding() {
+//   console.log(arguments);
+//   return this;
+// }
+
+// this로 사용할 객체
+// const thisArg = { a: 1};
+
+// getThisBinding 함수를 호출하면서 인수로 전달한 객체를 getThisBinding 함수의 this에 바인딩
+// apply 메서드는 호출할 함수의 인수를 배열로 묶어 전달
+// console.log(getThisBinding.apply(thisArg, [1, 2, 3]));
+// [Arguments] { '0': 1, '1': 2, '2': 3 }
+// { a: 1 }
+
+// call 메서드는 호출할 함수의 인수를 쉼표로 구분한 리스트 형식으로 전달
+// console.log(getThisBinding.call(thisArg, 1,2,3));
+// [Arguments] { '0': 1, '1': 2, '2': 3 }
+// { a: 1 }
+
+// ----------------------------------------------------------------------
+
+// 예제 22-21 ----------------------------------------------------------
+// function convertArgsToArray() {
+//   console.log(arguments);
+
+//   // arguments 객체를 배열로 변환
+//   // Array.prototype.slice를 인수 없이 호출하면 배열의 복사본을 생성
+//   // const arr = Array.prototype.slice.call(arguments);
+//   const arr = Array.prototype.slice.apply(arguments);
+//   console.log(arr); // [Arguments] { '0': 1, '1': 2, '2': 3 }
+
+//   return arr;
+// }
+
+// convertArgsToArray(1, 2, 3) // [ 1, 2, 3 ]
+
+// ----------------------------------------------------------------------
+
+// 예제 22-22 ----------------------------------------------------------
+// function getThisBinding() {
+//   return this;
+// }
+
+// this로 사용할 객체
+// const thisArg = { a: 1};
+
+// bind 메서드는 첫번째 인수로 전달한 thisArg로 this 바인딩이 교체된
+// getThisBinding 함수를 새롭게 생성해 반환
+// console.log(getThisBinding.bind(thisArg)); // [Function: bound getThisBinding]
+
+// bind 메서드는 함수를 호출하지는 않으므로 명시적으로 호출
+// console.log(getThisBinding.bind(thisArg)()); // { a: 1 }
+
+// ----------------------------------------------------------------------
+
+// 예제 22-23 ----------------------------------------------------------
+// const person = {
+//   name: 'Lee',
+//   foo(callback) {
+//     // 1번
+//     setTimeout(callback, 100);
+//   }
+// };
+
+// person.foo(function() {
+//   console.log(`Hi! my name is ${this.name}.`); // Hi! my name is undefined. - browser : Hi! my name is .
+  // [Function: bound getThisBinding]
+  // { a: 1 }
+  // 일반 함수로 호출된 콜백 함수 내부의 this.name은 브라우저 환경에서 window.name과 같음
+  // 브라우저 환경에서 window.name은 브라우저 창의 이름을 나타내는 빌트인 프로퍼티이며 기본값은 ''임
+  // Node.js환경에서 this.name은 undefined임
+// })
+// ----------------------------------------------------------------------
+
+// 예제 22-24 ----------------------------------------------------------
+const person = {
+  name: 'Lee',
+  foo(callback) {
+    // bind 메서드로 callback 함수 내부의 this 바인딩을 전달
+    setTimeout(callback.bind(this), 100);
+  }
+};
+
+person.foo(function() {
+  console.log(`Hi! my name is ${this.name}.`); // Hi! my name is Lee.
+})
 // ----------------------------------------------------------------------
