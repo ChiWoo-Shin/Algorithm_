@@ -3548,20 +3548,41 @@ a: a
 
 
 // 예제 23-04 ----------------------------------------------------------
-var x = 1;
-const y = 2;
+// var x = 1;
+// const y = 2;
 
-function foo (a){
-  var x = 3;
-  const y = 4;
+// function foo (a){
+//   var x = 3;
+//   const y = 4;
 
-  function bar (b) {
-    const z = 5;
-    console.log(a+b+x+y+z); // 42 a =20, b = 10, x =3, y =4, z = 5
-  }
+//   function bar (b) {
+//     const z = 5;
+//     console.log(a+b+x+y+z); // 42 a =20, b = 10, x =3, y =4, z = 5
+//   }
 
-  bar(10);
-}
+//   bar(10);
+// }
 
-foo(20);
+// foo(20);
+// ----------------------------------------------------------------------
+
+// 예제 24-05 ----------------------------------------------------------
+// A closure is the combination of a function and the lexical environment within which that function was declared.
+// 클로저는 함수와 그 함수가 선언된 렉시컬 환경과의 조합이다.
+
+// const x =1;
+
+// function outer() {
+//   const x = 10;
+//   const inner = function() { console.log(x); }; // 10
+//   return inner;
+// }
+
+// const innerFunc = outer(); // outer 함수를 호출하면 outer 함수는 중첩함수 inner를 반환하고 생명주기를 마감
+// innerFunc();
+// ----------------------------------------------------------------------
+
+// 예제 24-06 ----------------------------------------------------------
+
+
 // ----------------------------------------------------------------------

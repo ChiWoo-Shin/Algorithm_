@@ -1,6 +1,84 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
     <body>
         <script src="예제test.js"></script>
+    </body>
+</html> -->
+
+<!-- 예제 24-06 여기는 closure가 없음 -->
+<!-- <!DOCTYPE html>
+<html>
+    <body>
+        example 24-06
+        <script>
+            function foo() {
+                const x =1;
+                const y = 2;
+
+                // 일반적으로 클로저라고 하지 않음
+                function bar() {
+                    const z =3;
+                    debugger;
+                    // 상위 스코프의 식별자를 참조하지 않음
+                    console.log(z);
+                }
+
+                return bar;
+            }
+
+            const bar = foo();
+            bar();
+        </script>
+    </body>
+</html> -->
+
+<!-- 예제 24-07  여기는 closure가 foo-->
+<!-- <!DOCTYPE html>
+<html>
+    <body>
+        example 24-07???????
+        <script>
+            function foo() {
+                const x =1;
+
+                // bar 함수는 클로저였지만 곧바로 소멸
+                // 이러한 함수는 일반적으로 클로저라고 하지 않음
+                function bar() {
+                    debugger;
+                    // 상위 스코프의 식별자를 참조하지 않음
+                    console.log(x);
+                }
+
+                bar();
+            }
+
+            foo();
+        </script>
+    </body>
+</html> -->
+
+<!-- 예제 24-08  여기는 closure가 foo-->
+<!DOCTYPE html>
+<html>
+    <body>
+        example 24-08
+        <script>
+            function foo() {
+                const x = 1;
+                const y = 2;
+
+                // Closure
+                // 중첩 함수 bar는 외부함수보다 더 오래 유지되며 상위 스코프의 식별자를 참조
+                function bar() {
+                    debugger;
+                    // 상위 스코프의 식별자를 참조하지 않음
+                    console.log(x);
+                }
+
+                return bar();
+            }
+            const bar = foo();
+            bar();
+        </script>
     </body>
 </html>
