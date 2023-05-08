@@ -3582,7 +3582,182 @@ a: a
 // innerFunc();
 // ----------------------------------------------------------------------
 
-// 예제 24-06 ----------------------------------------------------------
+// 예제 24-09 ----------------------------------------------------------
+// 카운트 상태 변수
+// let num = 0;
 
+// // 카운트 상태 변경 함수
+// const increase = function() {
+//   // 카운트 상태를 1만큼 증가시킨다.
+//   return ++num;
+// };
 
+// console.log(increase()); // 1 호출될 때마다 결과가 num에 저장됨
+// console.log(increase()); // 2
+// console.log(increase()); // 3
+// 위코드의 문제는 num이 전역 변수이므로 언제든지 값이 변경될 수 있다는 것임
+// 따라서 카운트 상태를 변경하는 increase 함수를 호출할 때마다 num을 증가시키는 것이 아니라
+// 카운트 상태를 유지하기 위한 전용 변수를 사용해야 함
+// ----------------------------------------------------------------------
+
+// 예제 24-10 ----------------------------------------------------------
+// 카운트 상태 변경 함수
+// const increase = function() {
+//   // 카운트 상태 변수
+//   let num = 0;
+
+//   // 카운트 상태를 1만큼 증가 시킴
+//   return ++num;
+// }
+
+// 이전 상태를 유지 못함
+// console.log(increase()); // 1
+// console.log(increase()); // 1
+// console.log(increase()); // 1
+// ----------------------------------------------------------------------
+
+// 예제 24-11 ----------------------------------------------------------
+// 카운트 상태 변경 함수
+// const increase = (function() {
+//   // 카운트 상태 변수
+//   let num = 0;
+
+//   // 클로저
+//   return function() {
+//     // 카운트 상태를 1만큼 증가 시킴
+//     return ++num;
+//   };
+// }
+// )();
+
+// console.log(increase()); // 1
+// console.log(increase()); // 2
+// console.log(increase()); // 3
+// ----------------------------------------------------------------------
+
+// 예제 24-12 ----------------------------------------------------------
+// const counter = (function() {
+//   // 카운트 상태 변수
+//   let num = 0;
+
+//   // 클로저인 메서드를 갖는 객체를 반환
+//   // 객체 리터럴은 스코프를 만들지 않음
+//   // 따라서 아래 메서드들의 상위 스코프는 즉시 실행 함수의 렉시컬 환경임
+//   return {
+//     // num: 0, 프로퍼티는 public하므로 은닉되지 않음
+//     increase() {
+//       return ++num;
+//     },
+//     decrease() {
+//       return num > 0 ? --num : 0;
+//     }
+//   };
+// }());
+
+// console.log(counter.increase()); // 1
+// console.log(counter.increase()); // 2
+
+// console.log(counter.decrease()); // 1
+// console.log(counter.decrease()); // 0
+// ----------------------------------------------------------------------
+
+// 예제 24-13 ----------------------------------------------------------
+// const Counter = (function() {
+//   // 1. 카운트 상태 변수
+//   let num = 0;
+
+//   function Counter() {
+//     // 2. this.num은 public하다.
+//     // 프로퍼티는 public하므로 은닉되지 않음
+//   }
+
+//   Counter.prototype.increase = function() {
+//     return ++num;
+//   }
+
+//   Counter.prototype.decrease = function() {
+//     return num > 0 ? --num : 0;
+//   }
+
+//   return Counter;
+// }());
+
+// const counter = new Counter();
+
+// console.log(counter.increase()); // 1
+// console.log(counter.increase()); // 2
+
+// console.log(counter.decrease()); // 1
+// console.log(counter.decrease()); // 0
+// ----------------------------------------------------------------------
+
+// 예제 24-14 ----------------------------------------------------------
+// 함수를 인수로 전달받고 함수를 반환하는 고차 함수
+// 이 함수는 카운트 상태를 유지하기 위한 자유 변수 counter를 기억하는 클로저를 반환
+// function makeCounter(aux) {
+//   // 카운트 상태를 유지하기 위한 자유 변수
+//   let counter = 0;
+
+//   // 클로저를 반환
+//   return function () {
+//     // 인수로 전달 받은 보조 함수에 상태 변경을 위임
+//     counter = aux(counter);
+//     return counter;
+//   };
+// }
+
+// // 보조 함수
+// function increase(n) {
+//   return ++n;
+// }
+
+// // 보조 함수
+// function decrease(n) {
+//   return --n;
+// }
+
+// // 함수로 함수를 생성한다.
+// // makeCounter 함수는 보조 함수를 인수로 전달받아 함수를 반환한다.
+// const increaser = makeCounter(increase);
+// console.log(increaser()); // 1
+// console.log(increaser()); // 2
+
+// // increaser 함수와는 별개의 독립된 렉시컬 환경을 갖기 때문에 카운트 상태가 연동하지 않는다.
+// const decreaser = makeCounter(decrease);
+// console.log(decreaser()); // -1
+// console.log(decreaser()); // -2
+// ----------------------------------------------------------------------
+
+// 예제 24-15 ----------------------------------------------------------
+// 함수를 반환하는 고차 함수
+// 이 함수는 카운트 상태를 유지하기 위한 자유 변수 counter를 기억하는 클로저를 반환
+const counter = (function () {
+  // 카운트 상태를 유지하기 위한 자유 변수
+  let counter = 0;
+
+  // 함수를 인수로 전달받는 클로저를 반환
+  return function (aux) {
+    // 인수로 전달 받은 보조 함수에 상태 변경을 위임
+    counter = aux(counter);
+    return counter;
+  };
+}());
+
+// 보조 함수
+function increase(n) {
+  return ++n;
+}
+
+// 보조 함수
+function decrease(n) {
+  return --n;
+}
+
+// 보조 함수를 전달하여 호출
+console.log(counter(increase)); // 1
+console.log(counter(increase)); // 2
+
+// 자유 변수를 공유
+console.log(counter(decrease)); // 1
+console.log(counter(decrease)); // 0
 // ----------------------------------------------------------------------
