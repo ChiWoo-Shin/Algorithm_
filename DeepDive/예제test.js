@@ -3731,33 +3731,179 @@ a: a
 // 예제 24-15 ----------------------------------------------------------
 // 함수를 반환하는 고차 함수
 // 이 함수는 카운트 상태를 유지하기 위한 자유 변수 counter를 기억하는 클로저를 반환
-const counter = (function () {
-  // 카운트 상태를 유지하기 위한 자유 변수
-  let counter = 0;
+// const counter = (function () {
+//   // 카운트 상태를 유지하기 위한 자유 변수
+//   let counter = 0;
 
-  // 함수를 인수로 전달받는 클로저를 반환
-  return function (aux) {
-    // 인수로 전달 받은 보조 함수에 상태 변경을 위임
-    counter = aux(counter);
-    return counter;
-  };
-}());
+//   // 함수를 인수로 전달받는 클로저를 반환
+//   return function (aux) {
+//     // 인수로 전달 받은 보조 함수에 상태 변경을 위임
+//     counter = aux(counter);
+//     return counter;
+//   };
+// }());
 
-// 보조 함수
-function increase(n) {
-  return ++n;
-}
+// // 보조 함수
+// function increase(n) {
+//   return ++n;
+// }
 
-// 보조 함수
-function decrease(n) {
-  return --n;
-}
+// // 보조 함수
+// function decrease(n) {
+//   return --n;
+// }
 
-// 보조 함수를 전달하여 호출
-console.log(counter(increase)); // 1
-console.log(counter(increase)); // 2
+// // 보조 함수를 전달하여 호출
+// console.log(counter(increase)); // 1
+// console.log(counter(increase)); // 2
 
-// 자유 변수를 공유
-console.log(counter(decrease)); // 1
-console.log(counter(decrease)); // 0
+// // 자유 변수를 공유
+// console.log(counter(decrease)); // 1
+// console.log(counter(decrease)); // 0
+// ----------------------------------------------------------------------
+
+// 예제 24-16 ----------------------------------------------------------
+// function Person(name, age) {
+//   this.name = name; // public
+//   let _age = age; // private
+
+//   // 인스턴스 메서드
+//   this.sayHi = function() {
+//     console.log(`Hi! My name is ${this.name}. I am ${_age}.`);
+//   };
+// }
+
+// const me = new Person('Lee', 20);
+// me.sayHi(); // Hi! My name is Lee. I am 20.
+// console.log(me.name); // Lee
+// console.log(me._age); // undefined
+
+// const you = new Person('Kim', 30);
+// you.sayHi(); // Hi! My name is Kim. I am 30.
+// console.log(you.name); // Kim
+// console.log(you._age); // undefined
+// ----------------------------------------------------------------------
+
+// 예제 24-17 ----------------------------------------------------------
+// function Person(name, age) {
+//   this.name = name; // public
+//   let _age = age; // private
+// }
+
+// // 프로토타입 메서드
+// Person.prototype.sayHi = function() {
+//   // Person 생성자 함수의 지역 변수 _age를 참조할 수 없다.
+//   console.log(`Hi! My name is ${this.name}. I am ${_age}.`);
+// }
+// ----------------------------------------------------------------------
+
+// 예제 24-18 ----------------------------------------------------------
+// const Person = (function() {
+//   let _age = 0; // private
+
+//   // 생성자 함수
+//   function Person(name, age) {
+//     this.name = name; // public
+//     _age = age;
+//   }
+
+//   // 프로토타입 메서드
+//   Person.prototype.sayHi = function() {
+//     console.log(`Hi! My name is ${this.name}. I am ${_age}.`);
+//   };
+
+//   // 생성자 함수를 반환
+//   return Person;
+// }());
+
+// const me = new Person('Lee', 20);
+// me.sayHi(); // Hi! My name is Lee. I am 20.
+// console.log(me.name); // Lee
+// console.log(me._age); // undefined
+
+// const you = new Person('Kim', 30);
+// you.sayHi(); // Hi! My name is Kim. I am 30.
+// console.log(you.name); // Kim
+// console.log(you._age); // undefined
+// ----------------------------------------------------------------------
+
+// 예제 24-19 ----------------------------------------------------------
+// const Person = (function() {
+//   let _age = 0; // private
+
+//   // 생성자 함수
+//   function Person(name, age) {
+//     this.name = name; // public
+//     _age = age;
+//   }
+
+//   // 프로토타입 메서드
+//   Person.prototype.sayHi = function() {
+//     console.log(`Hi! My name is ${this.name}. I am ${_age}.`);
+//   };
+
+//   // 생성자 함수를 반환
+//   return Person;
+// }());
+
+// const me = new Person('Lee', 20);
+// me.sayHi(); // Hi! My name is Lee. I am 20.
+
+// const you = new Person('Kim', 30);
+// you.sayHi(); // Hi! My name is Kim. I am 30.
+
+// // _age 변수 값이 변경됨
+// me.sayHi(); // Hi! My name is Lee. I am 30.
+// ----------------------------------------------------------------------
+
+// 예제 24-20 ----------------------------------------------------------
+// var funcs = [];
+
+// for (var i = 0; i < 3; i++) {
+//   funcs[i] = function () { return i; }; // 1번
+// }
+
+// for (var j = 0; j < funcs.length; j++) {
+//   console.log(funcs[j]()); // 2번
+// }
+
+// ----------------------------------------------------------------------
+
+// 예제 24-21 ----------------------------------------------------------
+// var funcs = [];
+// for (var i = 0; i < 3; i++) {
+//   funcs[i] = (function (id) { // 1
+//     return function () {
+//       return id;
+//     };
+//   }(i));
+// }
+
+// for (var j = 0; j < funcs.length; j++) {
+//   console.log(funcs[j]()); // 0 1 2
+// }
+
+// ----------------------------------------------------------------------
+
+// 예제 24-22 ----------------------------------------------------------
+// const funcs = [];
+
+// for (let i = 0; i < 3; i++) {
+//   funcs[i] = function () {
+//     return i;
+//   };
+// }
+
+// for (let i = 0; i < funcs.length; i++) {
+//   console.log(funcs[i]()); // 0 1 2
+// }
+// ----------------------------------------------------------------------
+
+// 예제 24-23 ----------------------------------------------------------
+// 요소가 3개인 배열을 생성하고 배열의 인덱스를 반환하는 함수를 요소로 추가한다.
+// 배열의 요소로 추가된 함수들은 모두 클로저다.
+const funcs = Array.from(new Array(3), (_, i) => () => i);
+
+// 배열의 모든 요소(함수)를 순차적으로 호출한다.
+funcs.forEach(f => console.log(f())); // 0 1 2
 // ----------------------------------------------------------------------
