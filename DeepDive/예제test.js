@@ -4131,15 +4131,131 @@ a: a
 // ----------------------------------------------------------------------
 
 // 예제 25-21 ----------------------------------------------------------
-class Person {
-  constructor(name) {
-    this.name = name;
+// class Person {
+//   constructor(name) {
+//     this.name = name;
 
-    // 명시적으로 원시값을 반환함녀 원시값 반환은 무시되고 암묵적으로 this가 반환된다
-    return 100;
+//     // 명시적으로 원시값을 반환함녀 원시값 반환은 무시되고 암묵적으로 this가 반환된다
+//     return 100;
+//   }
+// }
+
+// const me = new Person('Lee');
+// console.log(me); // Person { name: 'Lee' }
+// ----------------------------------------------------------------------
+
+// 예제 25-22 ----------------------------------------------------------
+// // 생성자 함수
+// function Person(name){
+//   this.name = name;
+// }
+
+// // 프로토타입 메서드
+// Person.prototype.sayHi = function(){
+//   console.log(`Hi! My name is ${this.name}`);
+// }
+
+// const me = new Person('Lee');
+// me.sayHi(); // Hi! My name is Lee
+// ----------------------------------------------------------------------
+
+// 예제 25-23 ----------------------------------------------------------
+// class Person {
+//   // 생성자
+//   constructor(name) {
+//     // 인스턴스 생성 및 초기화
+//     this.name = name;
+//   }
+
+//   // 프로토타입 메서드
+//   sayHi() {
+//     console.log(`Hi! My name is ${this.name}`);
+//   }
+// }
+
+// const me = new Person('Lee');
+// me.sayHi(); // Hi! My name is Lee
+
+// 예제 25-24 ----------------------------------------------------------
+// me 객체의 프로토타입은 Person.prototype이다.
+// Object.getPrototypeOf(me) === Person.prototype; // -> true
+// me instanceof Person; // -> true
+// console.log(me instanceof Person); // -> true
+
+// // Person.prototype의 프로토타입은 Object.prototype이다.
+// Object.getPrototypeOf(Person.prototype) === Object.prototype; // -> true
+// me instanceof Object; // -> true
+// console.log(me instanceof Object); // -> true
+
+// // me 객체의 constructor는 Person 클래스다.
+// me.constructor === Person; // -> true
+// console.log(me.constructor === Person); // -> true
+// ----------------------------------------------------------------------
+
+// 예제 25-25 ----------------------------------------------------------
+// 생성자 함수
+// function Person(name) {
+//   this.name = name;
+// }
+
+// // 정적 메서드
+// Person.sayHi = function () {
+//   console.log('Hi!');
+// }
+
+// // 정적 메서드 호출
+// Person.sayHi(); // Hi!
+// ----------------------------------------------------------------------
+
+// 예제 25-26 ----------------------------------------------------------
+// class Person {
+//   // 생성자
+//   constructor(name) {
+//     // 인스턴스 생성 및 초기화
+//     this.name = name;
+//   }
+
+//   // 정적 메서드
+//   static sayHi() {
+//     console.log('Hi!');
+//   }
+// }
+
+// // 예제 25-27 ----------------------------------------------------------
+// // 정적 메서드는 클래스로 호출한다
+// // 정적 메서드는 인스턴스 없이도 호출할 수 있다.
+// Person.sayHi(); // Hi!
+
+// // 예제 25-28 ----------------------------------------------------------
+// // 인스턴스 생성
+// const me = new Person('Lee');
+// me.sayHi(); // TypeError: me.sayHi is not a function
+// ----------------------------------------------------------------------
+
+// 예제 25-29 ----------------------------------------------------------
+// class Square {
+//   // 정적 메서드
+//   static area(width, height) {
+//     return width * height;
+//   }
+// }
+
+// console.log(Square.area(10, 10)); // 100
+// ----------------------------------------------------------------------
+
+// 예제 25-30 ----------------------------------------------------------
+class Square {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+  }
+
+  // 프로토타입 메서드
+  area() {
+    return this.width * this.height;
   }
 }
 
-const me = new Person('Lee');
-console.log(me); // Person { name: 'Lee' }
+const square = new Square(10, 10);
+console.log(square.area()); // 100
 // ----------------------------------------------------------------------
