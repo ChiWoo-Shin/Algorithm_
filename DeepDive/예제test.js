@@ -4244,18 +4244,46 @@ a: a
 // ----------------------------------------------------------------------
 
 // 예제 25-30 ----------------------------------------------------------
-class Square {
-  constructor(width, height) {
-    this.width = width;
-    this.height = height;
-  }
+// class Square {
+//   constructor(width, height) {
+//     this.width = width;
+//     this.height = height;
+//   }
 
-  // 프로토타입 메서드
-  area() {
-    return this.width * this.height;
+//   // 프로토타입 메서드
+//   area() {
+//     return this.width * this.height;
+//   }
+// }
+
+// const square = new Square(10, 10);
+// console.log(square.area()); // 100
+// ----------------------------------------------------------------------
+
+// 예제 25-32 ----------------------------------------------------------
+// class Person {
+//   // 생성자
+//   constructor(name) {
+//     // 1. 암묵적으로 인스턴스가 생성되고 this에 바인딩됨
+//     console.log(this); // Person {}
+//     console.log(Object.getPrototypeOf(this) === Person.prototype); // true
+
+//     // 2. this에 바인딩되어 있는 인스턴스를 초기화한다
+//     this.name = name;
+
+//     // 3. 완성된 인스턴스가 바인딩된 this가 암묵적으로 반환됨
+//   }
+// }
+// ----------------------------------------------------------------------
+
+// 예제 25-33 ----------------------------------------------------------
+class Person {
+  constructor(name) {
+    // 인스턴스 프로퍼티
+    this.name = name;
   }
 }
 
-const square = new Square(10, 10);
-console.log(square.area()); // 100
+const me = new Person('Lee');
+console.log(me); // Person {name: "Lee"}
 // ----------------------------------------------------------------------
