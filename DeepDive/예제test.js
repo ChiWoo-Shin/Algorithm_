@@ -4577,19 +4577,206 @@ a: a
 // ----------------------------------------------------------------------
 
 // 예제 25-53 -----------------------------------------------------------
-class MyMath {
-  // static public 필드 정의
-  static PI = 22/7;
+// class MyMath {
+//   // static public 필드 정의
+//   static PI = 22/7;
 
-  // static private 필드 정의
-  static #num = 10;
+//   // static private 필드 정의
+//   static #num = 10;
 
-  // static 메서드
-  static increment() {
-    return ++MyMath.#num;
+//   // static 메서드
+//   static increment() {
+//     return ++MyMath.#num;
+//   }
+// }
+
+// console.log(MyMath.PI); // 3.142857142857143
+// console.log(MyMath.increment()); // 11
+// ----------------------------------------------------------------------
+
+// 예제 25-54 -----------------------------------------------------------
+// class Animal {
+//   constructor (age, weight) {
+//     this.age = age;
+//     this.weight = weight;
+//   }
+
+//   eat () { return 'eat'; }
+
+//   move () { return 'move'; }
+// }
+
+// // 상속을 통해 Animal 클래스를 확장한 Bird 클래스
+// class Bird extends Animal {
+//   fly () { return 'fly'; }
+// }
+
+// const bird = new Bird(1, 5);
+// console.log(bird); // Bird { age: 1, weight: 5 }
+// console.log(bird instanceof Bird); // true
+// console.log(bird instanceof Animal); // true
+
+// console.log(bird.eat()); // eat
+// console.log(bird.move()); // move
+// console.log(bird.fly()); // fly
+// ----------------------------------------------------------------------
+
+// 예제 25-55 -----------------------------------------------------------
+// 의사 클래스 상속(pseudo classical inheritance) 패턴
+// var Animal = (function () {
+//   function Animal(age, weight) {
+//     this.age = age;
+//     this.weight = weight;
+//   }
+
+//   Animal.prototype.eat = function () {
+//     return 'eat';
+//   };
+
+//   Animal.prototype.move = function () {
+//     return 'move';
+//   }
+
+//   return Animal;
+// }());
+
+// // Animal 생성자 함수를 상속하여 확장한 Bird 생성자 함수
+// var Bird = (function (){
+//   function Bird() {
+//     // Animal 생성자 함수에게 this와 인수를 전달하면서 호출
+//     Animal.apply(this, arguments);
+//   }
+
+//   // Bird.prototype을 Animal.prototype을 프로토타입으로 갖는 객체로 교체
+//   Bird.prototype = Object.create(Animal.prototype);
+//   // Bird.prototype.constructor을 Animal에서 Bird로 교체
+//   Bird.prototype.constructor = Bird;
+
+//   Bird.prototype.fly = function () {
+//     return 'fly';
+//   };
+
+//   return Bird;
+// }())
+
+// var bird = new Bird(1, 5);
+
+// console.log(bird); // Bird { age: 1, weight: 5 }
+// console.log(bird.eat()); // eat
+// console.log(bird.move()); // move
+// console.log(bird.fly()); // fly
+// ----------------------------------------------------------------------
+
+// 예제 25-56 -----------------------------------------------------------
+// 수퍼(베이스/부모) 클래스
+// class Base {}
+
+// 서브(파생/자식) 클래스
+// class Derived extends Base {}
+// ----------------------------------------------------------------------
+
+// 예제 25-57 -----------------------------------------------------------
+// // 생성자 함수
+// function Base(a) {
+//   this.a = a;
+// }
+
+// // 생성자 함수를 상속받는 서브클래스
+// class Derived extends Base {}
+
+// const derived = new Derived(1);
+// console.log(derived); // Derived { a: 1 }
+// ----------------------------------------------------------------------
+
+// 예제 25-58 -----------------------------------------------------------
+// function Base1() {}
+
+// class Base2 {}
+
+// let condition  = true;
+
+// // 조건에 따라 동적으로 상속 대상을 결정하는 서브클래스
+// class Derived extends (condition ? Base1 : Base2) {}
+
+// const derived = new Derived();
+// console.log(derived); // Derived {}
+
+// console.log(derived instanceof Base1); // true
+// console.log(derived instanceof Base2); // false
+// ----------------------------------------------------------------------
+
+// 예제 25-59 -----------------------------------------------------------
+// constructor() {}
+// 서브클래스에서 constructor를 생략하면 클래스에 다음과 같은
+// constructor가 암묵적으로 정의됨
+// ----------------------------------------------------------------------
+
+// 예제 25-60 -----------------------------------------------------------
+// constructor(...args) { super(...args); }
+// args는 new 연산자와 함께 클래스를 호추랗ㄹ 때 전달한 인수의 리스트다
+// super()는 수퍼클래스의 constructor(super-constructor)를 호출하여 인스턴스를 생성
+// ... 은 Rest 파라미터
+// ----------------------------------------------------------------------
+
+// 예제 25-61 -----------------------------------------------------------
+// // 수퍼 클래스
+// class Base {}
+
+// // 서브 클래스
+// class Derived extends Base {}
+// ----------------------------------------------------------------------
+
+// 예제 25-62 -----------------------------------------------------------
+// 수퍼 클래스
+// class Base {
+//   constructor() {}
+// }
+
+// // 서브 클래스
+// class Derived extends Base {
+//   constructor(...args) {super(...args);}
+// }
+
+// const derived = new Derived();
+// console.log(derived); // Derived {}
+// ----------------------------------------------------------------------
+
+// 예제 25-63 -----------------------------------------------------------
+// 수퍼클래스
+// class Base {
+//   constructor(a, b) {
+//     this.a = a;
+//     this.b = b;
+//   }
+// }
+
+// // 서브클래스
+// class Derived extends Base {
+//   // 다음과 같이 암묵적으로 constructor가 정의됨
+//   // constructor(...args) { super(...args); }
+// }
+
+// const derived = new Derived(1, 2);
+// console.log(derived); // Derived { a: 1, b: 2 }
+// ----------------------------------------------------------------------
+
+// 예제 25-64 -----------------------------------------------------------
+// 수퍼클래스
+class Base {
+  constructor(a, b) { // No.4
+    this.a = a;
+    this.b = b;
   }
 }
 
-console.log(MyMath.PI); // 3.142857142857143
-console.log(MyMath.increment()); // 11
+// 서브클래스
+class Derived extends Base {
+  constructor(a, b, c) { // No.2
+    super(a, b); // No.3
+    this.c = c;
+  }
+}
+
+const derived = new Derived(1, 2, 3); // No.1
+console.log(derived); // Derived { a: 1, b: 2, c: 3 }
 // ----------------------------------------------------------------------
