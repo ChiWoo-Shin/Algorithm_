@@ -4761,22 +4761,176 @@ a: a
 // ----------------------------------------------------------------------
 
 // 예제 25-64 -----------------------------------------------------------
+// // 수퍼클래스
+// class Base {
+//   constructor(a, b) { // No.4
+//     this.a = a;
+//     this.b = b;
+//   }
+// }
+
+// // 서브클래스
+// class Derived extends Base {
+//   constructor(a, b, c) { // No.2
+//     super(a, b); // No.3
+//     this.c = c;
+//   }
+// }
+
+// const derived = new Derived(1, 2, 3); // No.1
+// console.log(derived); // Derived { a: 1, b: 2, c: 3 }
+// ----------------------------------------------------------------------
+
+// 예제 25-65 -----------------------------------------------------------
+// 서브클래스에서 constructor를 생략하지 않는 경우 서브클래스의 constructor 에서는 반드시 super를 호출해야함
+// class Base {}
+
+// class Derived extends Base {
+//   constructor() {
+//     // ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//     console.log('constructor call');
+//   }
+// }
+
+// const derived = new Derived;
+// ----------------------------------------------------------------------
+
+// 예제 25-66 -----------------------------------------------------------
+// 서브클래스의 constructor에서 super를 호출하기 전에는 this를 참조할 수 없다.
+// class Base {}
+
+// class Derived extends Base {
+//   constructor() {
+//     // ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+//     this.a = 1;
+//     super();
+//   }
+// }
+
+// const derived = new Derived;
+// ----------------------------------------------------------------------
+
+// 예제 25-67 -----------------------------------------------------------
+// super는 반드시 서브클래스의 constructor에서만 호출한다.
+// 서브클래스가 아닌 클래스의 constructor나 함수에서 super를 호출하면 에러가 발생한다.
+// class Base {
+//   constructor() {
+//     super(); // SyntaxError: 'super' keyword unexpected here
+//   }
+// }
+
+// function Foo() {
+//   super(); // SyntaxError: 'super' keyword unexpected here
+// }
+// ----------------------------------------------------------------------
+
+// 예제 25-68 -----------------------------------------------------------
+// 서브클래스의 프로토타입 메서드 내에서 super.sayHi는 수퍼클래스의 프로토타입 메서드 sayHi를 가리킨다
+// 수퍼클래스
+// class Base {
+//   constructor(name) {
+//     this.name = name;
+//   }
+
+//   sayHi() {
+//     return `Hi! ${this.name}`;
+//   }
+// }
+
+// class Derived extends Base {
+//   sayHi() {
+//     // __super는 Base.prototype을 가리킨다
+//     return `Hi ${this.name}`;
+//   }
+// }
+
+// const derived = new Derived('Lee');
+// console.log(derived.sayHi()); // Hi! Lee how r u doing?
+// ----------------------------------------------------------------------
+
+// 예제 25-69 -----------------------------------------------------------
+// 수퍼클래스
+// class Base {
+//   constructor(name) {
+//     this.name = name;
+//   }
+
+//   sayHi() {
+//     return `Hi! ${this.name}`;
+//   }
+// }
+
+// class Derived extends Base {
+//   sayHi() {
+//     // __super는 Base.prototype을 가리킨다
+//     const __super = Object.getPrototypeOf(Derived.prototype);
+//     return `${__super.sayHi.call(this)} how r u doing?`;
+//   }
+// }
+
+// const derived = new Derived('Lee');
+// console.log(derived.sayHi()); // Hi! Lee how r u doing?
+// ----------------------------------------------------------------------
+
+// 예제 25-70 -----------------------------------------------------------
+/*
+super 참조를 의사코드로 표현하면 다음과 같다
+
+[[HomeObject]]는 메서드 자신을 바인딩하고 있는 객체를 가리킨다
+[[HomeObject]]를 통해 메서드 자신을 바인딩하고 있는 객체의 프로토타입을 찾을 수 있다.
+예를 들어, Derived 클래스의 sayHi 메서드는 Derived.prototype에 바인딩되어 있다.
+따라서 Derived 클래스의 sayHi 메서드의 [[HomeObject]]는 Derived.prototype이고
+이를 통해 Derived 클래스의 sayHi 메서드 내부의 super 참조가 Base.prototype으로 결정된다.
+따라서 super.sayHi는 Base.prototype.sayHi를 가리키게 된다.
+*/
+// super = Object.getPrototypeOf([[HomeObject]])
+// ----------------------------------------------------------------------
+
+// 예제 25-71 -----------------------------------------------------------
+// const obj = {
+//   // foo는 ES6의 메서드 축약 표현으로 정의한 메서드다. 따라서 [[HomeObject]]를 갖는다.
+//   foo() {},
+//   // bar는 ES6의 메서드 축약 표현으로 정의한 메서드가 아니라 일반 함수다.
+//   // 따라서 [[HomeObject]]를 갖지 않는다.
+//   bar: function() {}
+// }
+// ----------------------------------------------------------------------
+
+// 예제 25-72 -----------------------------------------------------------
+// const base = {
+//   name: 'Lee',
+//   sayHi() {
+//     return `Hi! ${this.name}`;
+//   }
+// };
+
+// const derived = {
+//   __proto__: base,
+//   // ES6 메서드 축약 표현으로 정의한 메서드다. 따라서 [[HomeObject]]를 갖는다.
+//   sayHi() {
+//     return `${super.sayHi()}. how r u doing?`;
+//   }
+// };
+
+// console.log(derived.sayHi()); // Hi! Lee. how r u doing?
+// ----------------------------------------------------------------------
+
+// 예제 25-73 -----------------------------------------------------------
+// 서브클래스의 정적 메서드 내에서 super.sayHi는 수퍼클래스의 정적 메서드 sayHi를 가리킴
 // 수퍼클래스
 class Base {
-  constructor(a, b) { // No.4
-    this.a = a;
-    this.b = b;
+  static sayHi() {
+    return 'hi!';
   }
 }
 
 // 서브클래스
 class Derived extends Base {
-  constructor(a, b, c) { // No.2
-    super(a, b); // No.3
-    this.c = c;
+  static sayHi() {
+    // super.sayHi는 수퍼클래스의 정적 메서드를 가리킨다
+    return `${super.sayHi()} how r u doing?`;
   }
 }
 
-const derived = new Derived(1, 2, 3); // No.1
-console.log(derived); // Derived { a: 1, b: 2, c: 3 }
+console.log(Derived.sayHi()); // hi! how r u doing?
 // ----------------------------------------------------------------------
