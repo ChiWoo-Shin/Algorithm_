@@ -4918,19 +4918,121 @@ super 참조를 의사코드로 표현하면 다음과 같다
 // 예제 25-73 -----------------------------------------------------------
 // 서브클래스의 정적 메서드 내에서 super.sayHi는 수퍼클래스의 정적 메서드 sayHi를 가리킴
 // 수퍼클래스
-class Base {
-  static sayHi() {
-    return 'hi!';
+// class Base {
+//   static sayHi() {
+//     return 'hi!';
+//   }
+// }
+
+// // 서브클래스
+// class Derived extends Base {
+//   static sayHi() {
+//     // super.sayHi는 수퍼클래스의 정적 메서드를 가리킨다
+//     return `${super.sayHi()} how r u doing?`;
+//   }
+// }
+
+// console.log(Derived.sayHi()); // hi! how r u doing?
+// ----------------------------------------------------------------------
+
+// 예제 25-74 -----------------------------------------------------------
+// // 수퍼클래스
+// class Rectangle {
+//   constructor(width, height) {
+
+// // 예제 25-75 -----------------------------------------------------------
+//     // 암묵적으로 빈 객체, 즉 인스턴스가 생성되고 this에 바인딩 됨
+//     console.log(this); // ColorRectangle {}
+//     // new 연산자와 함께 호출된 함수, 즉 new.target은 ColorRectangle이다.
+//     console.log(new.target); // [class ColorRectangle extends Rectangle]
+// // 예제 25-76 -----------------------------------------------------------
+//     // 생성된 인스턴스의 프로토타입으로 ColorRectangle.prototype이 설정됨
+//     console.log(Object.getPrototypeOf(this) === ColorRectangle.prototype); // true
+// // 예제 25-77 -----------------------------------------------------------
+//     console.log(this instanceof ColorRectangle); // true
+//     console.log(this instanceof Rectangle); // true
+
+//     this.width = width;
+//     this.height = height;
+//     console.log(this); // ColorRectangle { width: 2, height: 4 }
+//   }
+
+//   getArea() {
+//     return this.width * this.height;
+//   }
+
+//   toString() {
+//     return `width = ${this.width}, height=${this.height}`;
+//   }
+// }
+
+// // 서브클래스
+// class ColorRectangle extends Rectangle {
+//   constructor(width, height, color) {
+//     super(width, height);
+
+// // 예제 25-78 -----------------------------------------------------------
+//     // super가 반환한 인스턴스가 this에 바인딩됨
+//     console.log(this); // ColorRectangle { width: 2, height: 4 }
+//     this.color = color;
+
+// // 예제 25-78 -----------------------------------------------------------
+//     // 완성된 인스턴스가 바인딩된 this가 암묵적으로 반환됨
+//     console.log(this); // ColorRectangle { width: 2, height: 4, color: 'red' }
+//   }
+
+//   // 메서드 오버라이딩
+//   toString() {
+//     return super.toString() + `, color = ${this.color}`
+//   }
+// }
+
+// const colorRectangle = new ColorRectangle(2, 4, 'red');
+// console.log(colorRectangle); // ColorRectangle { width: 2, height: 4, color: 'red' }
+
+// // 상속을 통해 getArea 메서드를 호출
+// console.log(colorRectangle.getArea()); // 8
+// // 오버라이딩된 toString 메서드를 호출
+// console.log(colorRectangle.toString()); // width = 2, height=4, color = red
+// ----------------------------------------------------------------------
+
+// 예제 25-80 -----------------------------------------------------------
+// Array 생성자 함수를 상속받아 확장한 MyArray
+class MyArray extends Array {
+
+// 예제 25-83 -----------------------------------------------------------
+  // 모든 메서드가 Array 타입으 인스턴스를 반환하도록 함
+  static get [Symbol.species]() {return Array;}
+
+  // 중복된 배열 요소를 제거하고 반환한다 : [1, 1, 2, 3] => [1 ,2 ,3]
+  uniq() {
+    return this.filter((v, i, self) => self.indexOf(v) === i);
+  }
+
+  // 모든 배열 요소의 평균을 구한다 : [1, 2, 3] => 2
+  average() {
+    return this.reduce((pre, cur) => pre + cur, 0) / this.length;
   }
 }
 
-// 서브클래스
-class Derived extends Base {
-  static sayHi() {
-    // super.sayHi는 수퍼클래스의 정적 메서드를 가리킨다
-    return `${super.sayHi()} how r u doing?`;
-  }
-}
+const myArray = new MyArray(1, 1, 2, 3);
+console.log(myArray); // MyArray(4) [ 1, 1, 2, 3 ]
 
-console.log(Derived.sayHi()); // hi! how r u doing?
+// MyArray.prototype.uniq 호출
+console.log(myArray.uniq()); // MyArray(3) [ 1, 2, 3 ]
+// MyArray.prototype.average 호출
+console.log(myArray.average()); // 1.75
+
+// 예제 25-81 -----------------------------------------------------------
+// console.log(myArray.filter(v => v%2) instanceof MyArray); // true
+
+// 예제 25-82 -----------------------------------------------------------
+// 메서드 체이닝
+// [1, 1, 2, 3] => [1, 1, 3] => [1, 3] => 2
+// console.log(myArray.filter(v => v%2).uniq().average()); // 2
+// 예제 25-83 -----------------------------------------------------------
+console.log(myArray.uniq() instanceof MyArray); // false
+console.log(myArray.uniq() instanceof Array); // true
+// uniq 메서드는 Array 인스턴스를 반환하므로 average 메서드를 호출할 수 없다.
+console.log(myArray.uniq().average()); // TypeError: myArray.uniq(...).average is not a function
 // ----------------------------------------------------------------------
