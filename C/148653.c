@@ -32,3 +32,9 @@ int solution(int _storey) {
     
     return answer;
 }
+
+int main(void){
+    int a =0;
+    a = solution(123);
+    printf(" %d \n", a);
+}

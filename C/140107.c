@@ -22,4 +22,7 @@ long long solution(int _k, int _d) {
 int main(void){
     int a = 0;
     a = solution(2,4);
+    printf("%d\n",a);
+
+    printf("동작 여부를 확인합니다. \n");
 };
