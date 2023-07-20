@@ -90,53 +90,53 @@ int main(){
     free(ballons);
 }
 
-void swap(loc *a, loc *b) {
-    loc temp = *a;
-    *a = *b;
-    *b = temp;
-}
+// void swap(loc *a, loc *b) {
+//     loc temp = *a;
+//     *a = *b;
+//     *b = temp;
+// }
 
-// 선택정렬
-void selectionSort(loc *arr, int size) {
-    for (int i = 0; i < size - 1; i++) {
-        int min_index = i;
-        for (int j = i + 1; j < size; j++) {
-            // 구조체 멤버 중에서 (x, y) 좌표로 정렬
-            if (arr[j].x < arr[min_index].x || (arr[j].x == arr[min_index].x && arr[j].y < arr[min_index].y)) {
-                min_index = j;
-            }
-        }
-        if (min_index != i) {
-            swap(&arr[i], &arr[min_index]);
-        }
-    }
-}
-// 사용법
-selectionSort(ballons, N);
+// // 선택정렬
+// void selectionSort(loc *arr, int size) {
+//     for (int i = 0; i < size - 1; i++) {
+//         int min_index = i;
+//         for (int j = i + 1; j < size; j++) {
+//             // 구조체 멤버 중에서 (x, y) 좌표로 정렬
+//             if (arr[j].x < arr[min_index].x || (arr[j].x == arr[min_index].x && arr[j].y < arr[min_index].y)) {
+//                 min_index = j;
+//             }
+//         }
+//         if (min_index != i) {
+//             swap(&arr[i], &arr[min_index]);
+//         }
+//     }
+// }
+// // 사용법
+// selectionSort(ballons, N);
 
 
 
-int partition(loc *arr, int low, int high) {
-    int pivot_x = arr[high].x;
-    int pivot_y = arr[high].y;
-    int i = low - 1;
+// int partition(loc *arr, int low, int high) {
+//     int pivot_x = arr[high].x;
+//     int pivot_y = arr[high].y;
+//     int i = low - 1;
 
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j].x < pivot_x || (arr[j].x == pivot_x && arr[j].y < pivot_y)) {
-            i++;
-            swap(&arr[i], &arr[j]);
-        }
-    }
-    swap(&arr[i + 1], &arr[high]);
-    return i + 1;
-}
+//     for (int j = low; j <= high - 1; j++) {
+//         if (arr[j].x < pivot_x || (arr[j].x == pivot_x && arr[j].y < pivot_y)) {
+//             i++;
+//             swap(&arr[i], &arr[j]);
+//         }
+//     }
+//     swap(&arr[i + 1], &arr[high]);
+//     return i + 1;
+// }
 
-void quickSort(loc *arr, int low, int high) {
-    if (low < high) {
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-    }
-}
-// 사용법
-quickSort(ballons, 0, N - 1);
+// void quickSort(loc *arr, int low, int high) {
+//     if (low < high) {
+//         int pi = partition(arr, low, high);
+//         quickSort(arr, low, pi - 1);
+//         quickSort(arr, pi + 1, high);
+//     }
+// }
+// // 사용법
+// quickSort(ballons, 0, N - 1);
